@@ -55,6 +55,17 @@
 
 ---
 
+### 2026-01-16
+
+#### Task: Update implementation plan with revised execution details
+
+- **Files modified**:
+  - `req/plan.md` - Added missing CI/test/docker build details, MER/survivorship audit tasks, additional UI mockup requirements, stub adapter metrics and factory requirements, ER/DQ UI additions, and security/secret management notes.
+  - `PROJECT_STATE.md` - Added this change log entry.
+- **What changed**: Populated existing PHASE sections in `req/plan.md` with additional tasks and clarifications provided in the revised execution plan; did not remove sections.
+- **Status**: complete
+- **Notes**: Update required by contributor; used to keep project plan aligned with execution guidance.
+
 ## Architecture Notes
 
 - **Framework**: Next.js 14 with App Router

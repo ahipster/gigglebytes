@@ -993,6 +993,15 @@ jobs:
         image: redis:7-alpine
         ports:
           - 6379:6379
+      kafka:
+        image: confluentinc/cp-kafka:7.5.0
+        ports:
+          - 9092:9092
+        options: >-
+          --health-cmd "bash -lc 'kafka-topics --bootstrap-server localhost:9092 --list || exit 1'"
+          --health-interval 30s
+          --health-timeout 10s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -1022,6 +1031,10 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install
       - run: pnpm build
+      - name: Build Docker image
+        run: |
+          # Build a container image for deployment/packaging
+          docker build -t ghcr.io/${{ github.repository }}/grip:latest .
 ```
 
 **Acceptance Criteria:**
@@ -1475,6 +1488,11 @@ File: `mockups/pages/dashboard.html`
 - [ ] Feedback incorporated
 - [ ] Mockups approved for implementation
 
+### Additional mockup requirements (additions)
+- Mapping Studio mock should include a static depiction of drag-and-drop field mapping between source schema (left) and canonical CDM (right), with example transformation rules shown.
+- Mockups must indicate multi-entity handling flows (bulk-merge, multi-select compare) and critical navigation states.
+- Verify and annotate designs for WCAG 2.1 AA accessibility (contrast, focus states, keyboard flows) in the mockups.
+
 ---
 
 # PHASE 2: STUB ADAPTERS & MOCK DATA (Weeks 6-8)
@@ -1689,6 +1707,11 @@ Repeat similar pattern for all 15 MVP sources:
 | 14 | PL_KRS | `pl-krs.stub.ts` | Polish companies |
 | 15 | US_SEC | `us-sec.stub.ts` | US SEC filers |
 
+### Additions (stubs)
+- Emit operational metrics from stubs (simulated latency, request/response counts, error rates) for dashboard aggregation.
+- Simulate rate-limits and configurable delays/errors in stubs to validate retry/backoff and error handling flows.
+- Ensure an adapter factory exists to dynamically load a stub by `registry_sources.source_code` and to register adapters for runtime selection.
+
 ### Task 2.4: Seed Data Generator
 
 File: `packages/adapters/src/stubs/seed-generator.ts`
@@ -1757,6 +1780,12 @@ function generateRegistrationNumber(sourceCode: string): string {
 - Survivorship algorithm implementation
 - Bi-temporal history tracking
 
+### Additions (from revised execution plan)
+- Implement row-level triggers and stored procedures to support MER lineage and versioning (ensure `mer_history` is populated on MER updates).
+- Add survivorship audit tracing: record attribute derivation (which `registry_record` contributed each winning attribute) and keep an immutable derivation trail for lineage reports.
+- Implement attribute-level locks and source-priority enforcement in the survivorship computation (respect locked attributes, null-prevention rules, and source priority rankings).
+- Expose API endpoints to fetch point-in-time MER snapshots and historical MER versions for compliance reporting (support `as_of` and system/valid-time queries).
+
 ## Week 13-14: Entity Resolution Engine
 
 ### Tasks
@@ -1765,6 +1794,11 @@ function generateRegistrationNumber(sourceCode: string): string {
 - Name normalization service
 - Match candidate queue
 
+### Additions (ER)
+- Implement configurable thresholds and policies to control automated linkages (STP) vs. manual review; expose these settings in config.
+- Add deterministic pre-checks (registration number + jurisdiction) to short-circuit probabilistic matching when exact identifiers match.
+- Define metrics to record match decisions, false-positive/false-negative rates, and reviewer interactions for tuning.
+
 ## Week 15-16: Data Quality Engine
 
 ### Tasks
@@ -1772,6 +1806,12 @@ function generateRegistrationNumber(sourceCode: string): string {
 - Issue tracking
 - Auto-remediation
 - DQ scoring
+
+### Additions (DQ)
+- Implement cross-field validations (e.g., jurisdiction-specific registration number formats and date/currency consistency checks).
+- Add SLA escalation metadata to `dq_issues` and automatic task creation for remediation; include escalation paths and SLA breach notifications.
+- Support manual remediation workflows with audit trail and reviewer assignment; record remediation actions and outcomes.
+- Surface DQ metrics on dashboards: counts by severity, auto-resolved vs manual, and filters by jurisdiction/entity type.
 
 ---
 
@@ -1784,6 +1824,11 @@ function generateRegistrationNumber(sourceCode: string): string {
 - OAuth2/API key authentication
 - Rate limiting
 - Error handling
+
+### Additions (Real adapters / security)
+- Integrate secrets management for adapter credentials (vault-backed or environment secrets) and ensure credentials are not stored in source.
+- Implement transport encryption and at-rest protections for sensitive fields retrieved from registries where applicable.
+- Validate rate-limit compliance for each adapter and add retry/backoff strategies with circuit-breaker patterns.
 
 ## Week 19-20: Remaining EU Sources
 
@@ -1821,12 +1866,19 @@ function generateRegistrationNumber(sourceCode: string): string {
 - Manual Entry / OCR
 - DQ Dashboard
 
+### Additions (Operational UIs)
+- Implement side-by-side ER Review UI: candidate comparison, attribute diffs, provenance (source + timestamp), and reviewer actions (Link / Block / Create New).
+- Provide an attribute-diff renderer that highlights WINNER, LOCKED, and source for each value; support keyboard-driven review flows for speed.
+
 ## Week 31-32: Configuration UIs
 
 ### Tasks
 - Source Health
 - Mapping Studio
 - Rule Editors
+
+### Additions (Config UIs)
+- Add a Configurable Rule UI for survivorship and ER: field-weight tuning, preview mode, and dry-run results so operators can validate rule changes before promoting.
 
 ---
 
@@ -1882,6 +1934,10 @@ function generateRegistrationNumber(sourceCode: string): string {
 - GitHub Actions deployment
 - Environment variables
 - Secrets management
+
+### Additions (Production security)
+- Integrate vault-backed secrets into CI/CD pipelines; ensure deployments fetch secrets at runtime rather than embedding them in build artifacts.
+- Add encrypted secrets handling for GCP service accounts and DB credentials, and rotate credentials as part of deployment processes.
 
 ## Week 47-48: Monitoring & Go-Live
 
