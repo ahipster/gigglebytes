@@ -1,4 +1,4 @@
-# GRIP Complete Specification
+# Project State
 
 > This file is the source of truth for project state. Updated after every task completion or code modification.
 

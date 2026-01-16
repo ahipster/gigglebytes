@@ -8,9 +8,9 @@ This file provides rules and context for LLMs and AI agents working on projects 
 
 > These rules MUST be followed. No exceptions.
 
-### 1. Update `grip_complete_specification.md` After Every Change
+### 1. Update `PROJECT_STATE.md` After Every Change
 
-**After EVERY task completion or code modification, you MUST update the project's `grip_complete_specification.md` file.**
+**After EVERY task completion or code modification, you MUST update the project's `PROJECT_STATE.md` file.**
 
 This file tracks:
 - What was changed and why
@@ -130,6 +130,38 @@ After completing work:
 4. **Test** - Verify changes work as expected
 5. **Document** - Update FEATURES.md and PLAN.md
 6. **Review** - Check for unintended side effects
+
+---
+
+## Pre-Commit Checklist (Local CI/CD)
+
+> No remote CI/CD configured yet. Agents MUST run these checks locally before committing.
+
+Before committing, agents MUST:
+
+1. **Run tests** (if test suite exists):
+   ```bash
+   npm test  # or: pytest, go test, etc.
+   ```
+
+2. **Run linter/formatter** (if configured):
+   ```bash
+   npm run lint  # or: ruff, eslint, prettier, etc.
+   ```
+
+3. **Verify build** (if applicable):
+   ```bash
+   npm run build  # or equivalent
+   ```
+
+4. **Update documentation**:
+   - Update `PROJECT_STATE.md` (MANDATORY)
+   - Update `FEATURES.md` if features changed
+   - Update `PLAN.md` if roadmap affected
+
+If any check fails, fix the issue before committing.
+
+<!-- TODO: Add CI/CD automation rules when GitHub Actions or similar is configured -->
 
 ---
 

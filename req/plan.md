@@ -50,12 +50,7 @@ grip/
 │   └── kafka/
 │       └── server.properties
 ├── packages/
-│   ├── api/                    # Node.js backend
-│   │   ├── src/
-│   │   ├── tests/
-│   │   ├── package.json
-│   │   └── tsconfig.json
-│   ├── web/                    # React frontend
+│   ├── app/                    # Next.js full-stack (API + UI)
 │   │   ├── src/
 │   │   ├── tests/
 │   │   ├── package.json
@@ -884,63 +879,56 @@ SMTP_FROM=noreply@grip.local
 
 ---
 
-## Week 2: Node.js API Scaffolding & CI/CD
+## Week 2: Next.js Full-Stack Scaffolding & CI/CD
 
-### Day 6-7: API Package Structure
+### Day 6-7: Full-Stack Package Structure
 
-**Task 0.2.1: Create API Package with NestJS**
+**Task 0.2.1: Create Full-Stack Package with Next.js**
 
 ```bash
-cd packages/api
-pnpm init
-pnpm add @nestjs/core @nestjs/common @nestjs/platform-express @nestjs/config @nestjs/swagger
-pnpm add @nestjs/typeorm typeorm pg
-pnpm add class-validator class-transformer
-pnpm add bcrypt jsonwebtoken uuid
-pnpm add -D @nestjs/cli @nestjs/testing typescript @types/node @types/bcrypt @types/jsonwebtoken
-pnpm add -D jest ts-jest @types/jest supertest @types/supertest
+cd packages/app
+pnpm create next-app@latest . --typescript --tailwind --eslint
+pnpm add @prisma/client bcrypt jsonwebtoken uuid
+pnpm add -D prisma @types/bcrypt @types/jsonwebtoken
 ```
 
 Directory structure:
 ```
-packages/api/
-├── src/
-│   ├── main.ts
-│   ├── app.module.ts
-│   ├── config/
-│   │   ├── configuration.ts
-│   │   └── database.config.ts
-│   ├── common/
-│   │   ├── decorators/
-│   │   ├── filters/
-│   │   ├── guards/
-│   │   ├── interceptors/
-│   │   └── pipes/
-│   ├── modules/
+packages/app/
+├── app/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── api/
 │   │   ├── auth/
-│   │   │   ├── auth.module.ts
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── auth.service.ts
-│   │   │   ├── strategies/
-│   │   │   └── dto/
+│   │   │   ├── register/route.ts
+│   │   │   ├── login/route.ts
+│   │   │   └── logout/route.ts
 │   │   ├── entities/
-│   │   │   ├── entities.module.ts
-│   │   │   ├── entities.controller.ts
-│   │   │   ├── entities.service.ts
-│   │   │   ├── entities/
-│   │   │   └── dto/
+│   │   │   ├── route.ts
+│   │   │   └── [id]/route.ts
 │   │   ├── records/
 │   │   ├── sources/
 │   │   ├── tasks/
-│   │   └── health/
-│   └── database/
-│       └── entities/
+│   │   └── health/route.ts
+│   └── (pages)/
+│       ├── dashboard/
+│       ├── entities/
+│       └── settings/
+├── components/
+│   ├── ui/
+│   └── features/
+├── lib/
+│   ├── auth.ts
+│   ├── db.ts
+│   └── api-client.ts
+├── public/
+├── prisma/
+│   └── schema.prisma
 ├── tests/
 │   ├── e2e/
 │   └── unit/
-├── nest-cli.json
 ├── tsconfig.json
-├── tsconfig.build.json
+├── next.config.js
 ├── jest.config.js
 └── package.json
 ```
@@ -948,10 +936,11 @@ packages/api/
 **Acceptance Criteria:**
 - [ ] `pnpm build` compiles without errors
 - [ ] `pnpm test` runs (even if no tests yet)
-- [ ] `pnpm start:dev` starts server on port 3000
-- [ ] Health endpoint at GET /health returns 200
+- [ ] `pnpm dev` starts server on port 3000
+- [ ] Health endpoint at GET /api/health returns 200
+- [ ] Home page renders at http://localhost:3000
 
-**Deliverable:** Commit `feat: NestJS API scaffolding`
+**Deliverable:** Commit `feat: Next.js full-stack scaffolding`
 
 ---
 
