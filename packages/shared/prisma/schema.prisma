@@ -1,0 +1,561 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum EntityStatus {
+  ACTIVE
+  INACTIVE
+  DISSOLVED
+  MERGED
+  @@map("entity_status")
+}
+
+enum SourcingMode {
+  AUTOMATED
+  SEMI_AUTOMATED
+  MANUAL
+  @@map("sourcing_mode")
+}
+
+enum SourcingMethod {
+  API
+  FILE
+  AGENT
+  OCR
+  HUMAN
+  @@map("sourcing_method")
+}
+
+enum QualityFlag {
+  CLEAN
+  WARNING
+  CRITICAL
+  @@map("quality_flag")
+}
+
+enum RegistryType {
+  BUSINESS
+  TAX
+  FI
+  INDIVIDUAL
+  @@map("registry_type")
+}
+
+enum ApiType {
+  REST
+  SOAP
+  SDMX
+  FILE
+  NONE
+  @@map("api_type")
+}
+
+enum CostModel {
+  FREE
+  SUBSCRIPTION
+  PER_QUERY
+  CONTRACT
+  @@map("cost_model")
+}
+
+enum HealthStatus {
+  HEALTHY
+  DEGRADED
+  DOWN
+  UNKNOWN
+  @@map("health_status")
+}
+
+enum AuthType {
+  NONE
+  API_KEY
+  OAUTH2
+  CERT
+  BASIC
+  @@map("auth_type")
+}
+
+enum TaskType {
+  MANUAL_REFRESH
+  ER_REVIEW
+  DQ_REMEDIATION
+  OCR_VERIFICATION
+  CONFLICT_RESOLUTION
+  @@map("task_type")
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+  ESCALATED
+  @@map("task_status")
+}
+
+enum MatchDecisionType {
+  AUTO_LINKED
+  MANUAL_LINKED
+  REJECTED
+  SPLIT
+  DEFERRED
+  @@map("match_decision_type")
+}
+
+enum DqCategory {
+  COMPLETENESS
+  FORMAT
+  CONSISTENCY
+  CURRENCY
+  ACCURACY
+  UNIQUENESS
+  @@map("dq_category")
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+  @@map("alert_severity")
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  VERIFIED
+  REJECTED
+  @@map("verification_status")
+}
+
+enum RelationshipType {
+  PARENT
+  SUBSIDIARY
+  BRANCH
+  UBO
+  DIRECTOR
+  SHAREHOLDER
+  FUND_MANAGER
+  @@map("relationship_type")
+}
+
+enum EntityEventType {
+  INCORPORATION
+  NAME_CHANGE
+  ADDRESS_CHANGE
+  STATUS_CHANGE
+  MERGER
+  ACQUISITION
+  SPLIT
+  DISSOLUTION
+  LIQUIDATION
+  REDOMICILIATION
+  @@map("entity_event_type")
+}
+
+// Models
+
+model Jurisdiction {
+  jurisdictionId    String   @id @default(dbgenerated("uuid_generate_v4()")) @map("jurisdiction_id") @db.Uuid
+  isoAlpha2         String   @unique @map("iso_alpha2") @db.VarChar(2)
+  isoAlpha3         String?  @map("iso_alpha3") @db.VarChar(3)
+  name              String   @db.VarChar(100)
+  level             String   @db.VarChar(20) // Check constraint handled in DB
+  parentId          String?  @map("parent_id") @db.Uuid
+  staleThresholdDays Int?     @default(365) @map("stale_threshold_days")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  parent            Jurisdiction?  @relation("JurisdictionHierarchy", fields: [parentId], references: [jurisdictionId])
+  children          Jurisdiction[] @relation("JurisdictionHierarchy")
+  sources           RegistrySource[]
+  masterRecords     MasterEntityRecord[]
+
+  @@map("jurisdictions")
+}
+
+model RegistrySource {
+  sourceId               String         @id @default(dbgenerated("uuid_generate_v4()")) @map("source_id") @db.Uuid
+  sourceCode             String         @unique @map("source_code") @db.VarChar(50)
+  sourceName             String         @map("source_name") @db.VarChar(200)
+  jurisdictionId         String?        @map("jurisdiction_id") @db.Uuid
+  registryType           RegistryType   @map("registry_type")
+  apiAvailable           Boolean?       @default(false) @map("api_available")
+  apiType                ApiType?       @default(NONE) @map("api_type")
+  apiEndpoint            String?        @map("api_endpoint") @db.VarChar(500)
+  costModel              CostModel?     @default(FREE) @map("cost_model")
+  refreshFrequency       String?        @map("refresh_frequency") @db.VarChar(50)
+  deltaAvailable         Boolean?       @default(false) @map("delta_available")
+  identifierFormat       String?        @map("identifier_format") @db.VarChar(200)
+  identifierRegex        String?        @map("identifier_regex") @db.VarChar(500)
+  priorityRank           Int?           @default(5) @map("priority_rank")
+  rateLimitRequests      Int?           @map("rate_limit_requests")
+  rateLimitPeriodSeconds Int?           @map("rate_limit_period_seconds")
+  authType               AuthType?      @default(NONE) @map("auth_type")
+  authConfig             Json?          @map("auth_config")
+  healthStatus           HealthStatus?  @default(UNKNOWN) @map("health_status")
+  lastHealthCheck        DateTime?      @map("last_health_check") @db.Timestamptz
+  isActive               Boolean?       @default(true) @map("is_active")
+  notes                  String?
+  createdAt              DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt              DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  jurisdiction           Jurisdiction?  @relation(fields: [jurisdictionId], references: [jurisdictionId])
+  records                RegistryRecord[]
+  entityEvents           EntityEvent[]
+  relationships          EntityRelationship[]
+  alerts                 Alert[]
+  ingestionJobs          IngestionJob[]
+
+  @@map("registry_sources")
+}
+
+model LegalEntity {
+  entityId        String        @id @default(dbgenerated("uuid_generate_v4()")) @map("entity_id") @db.Uuid
+  internalRef     String?       @map("internal_ref") @db.VarChar(50)
+  status          EntityStatus? @default(ACTIVE)
+  mergedIntoId    String?       @map("merged_into_id") @db.Uuid
+  mergeTs         DateTime?     @map("merge_ts") @db.Timestamptz
+  riskRating      String?       @map("risk_rating") @db.VarChar(20)
+  lastVerifiedTs  DateTime?     @map("last_verified_ts") @db.Timestamptz
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  mergedInto      LegalEntity?  @relation("EntityMerges", fields: [mergedIntoId], references: [entityId])
+  mergedFrom      LegalEntity[] @relation("EntityMerges")
+  registryRecords RegistryRecord[]
+  masterRecords   MasterEntityRecord[]
+  tasks           Task[]
+  matchTargets    MatchCandidate[]
+  matchDecisions  MatchDecision[]
+  parentRels      EntityRelationship[] @relation("ParentRel")
+  childRels       EntityRelationship[] @relation("ChildRel")
+  dqIssues        DqIssue[]
+  documents       Document[]
+  events          EntityEvent[]
+  snapshots       Snapshot[]
+  negativeMatchesA NegativeMatch[] @relation("NegativeMatchA")
+  negativeMatchesB NegativeMatch[] @relation("NegativeMatchB")
+
+  @@map("legal_entities")
+  @@index([status])
+  @@index([mergedIntoId])
+}
+
+model RegistryRecord {
+  recordId           String             @id @default(dbgenerated("uuid_generate_v4()")) @map("record_id") @db.Uuid
+  entityId           String             @map("entity_id") @db.Uuid
+  sourceId           String             @map("source_id") @db.Uuid
+  validFromSource    DateTime?          @map("valid_from_source") @db.Date
+  ingestionTs        DateTime           @default(now()) @map("ingestion_ts") @db.Timestamptz
+  sourcingMode       SourcingMode       @map("sourcing_mode")
+  sourcingMethod     SourcingMethod     @map("sourcing_method")
+  staleFlag          Boolean?           @default(false) @map("stale_flag")
+  qualityFlag        QualityFlag?       @default(CLEAN) @map("quality_flag")
+  verificationStatus VerificationStatus? @default(UNVERIFIED) @map("verification_status")
+  supersededById     String?            @map("superseded_by_id") @db.Uuid
+  rawPayload         Json               @map("raw_payload")
+  createdAt          DateTime           @default(now()) @map("created_at") @db.Timestamptz
+
+  entity             LegalEntity        @relation(fields: [entityId], references: [entityId])
+  source             RegistrySource     @relation(fields: [sourceId], references: [sourceId])
+  supersededBy       RegistryRecord?    @relation("RecordHistory", fields: [supersededById], references: [recordId])
+  supersedes         RegistryRecord[]   @relation("RecordHistory")
+  tasks              Task[]
+  matchCandidates    MatchCandidate[]
+  matchDecisions     MatchDecision[]
+  dqIssues           DqIssue[]
+  documents          Document[]
+  entityEvents       EntityEvent[]
+
+  @@map("registry_records")
+  @@index([entityId])
+  @@index([sourceId])
+  @@index([ingestionTs])
+  @@index([staleFlag])
+}
+
+model MasterEntityRecord {
+  merId                       String        @id @default(dbgenerated("uuid_generate_v4()")) @map("mer_id") @db.Uuid
+  entityId                    String        @map("entity_id") @db.Uuid
+  version                     Int           @default(1)
+  computedTs                  DateTime      @default(now()) @map("computed_ts") @db.Timestamptz
+  
+  legalName                   String?       @map("legal_name") @db.VarChar(500)
+  legalNameLocal              String?       @map("legal_name_local") @db.VarChar(500)
+  tradingName                 String?       @map("trading_name") @db.VarChar(500)
+  legalForm                   String?       @map("legal_form") @db.VarChar(100)
+  incorporationDate           DateTime?     @map("incorporation_date") @db.Date
+  incorporationJurisdictionId String?       @map("incorporation_jurisdiction_id") @db.Uuid
+  registrationNumber          String?       @map("registration_number") @db.VarChar(100)
+  taxId                       String?       @map("tax_id") @db.VarChar(100)
+  lei                         String?       @db.VarChar(20)
+  statusCode                  String?       @map("status_code") @db.VarChar(50)
+  
+  registeredAddress           Json?         @map("registered_address")
+  businessAddress             Json?         @map("business_address")
+  
+  dqScore                     Decimal?      @map("dq_score") @db.Decimal(5, 2)
+  attributeSources            Json?         @map("attribute_sources")
+  lockedAttributes            Json?         @default("[]") @map("locked_attributes")
+  
+  createdAt                   DateTime      @default(now()) @map("created_at") @db.Timestamptz
+
+  entity                      LegalEntity   @relation(fields: [entityId], references: [entityId])
+  incorporationJurisdiction   Jurisdiction? @relation(fields: [incorporationJurisdictionId], references: [jurisdictionId])
+
+  @@unique([entityId, version])
+  @@map("master_entity_records")
+  @@index([entityId])
+  @@index([entityId, version])
+}
+
+// ... Additional models for Tasks, MatchCandidates, Matches, DQRules, Documents, etc. 
+// Omitted for brevity in this initial pass, but would mirror init.sql completely.
+// Ideally run `prisma db pull` to get exact schema.
+
+model Task {
+  taskId       String     @id @default(dbgenerated("uuid_generate_v4()")) @map("task_id") @db.Uuid
+  taskType     TaskType   @map("task_type")
+  entityId     String?    @map("entity_id") @db.Uuid
+  recordId     String?    @map("record_id") @db.Uuid
+  priority     Int?       @default(5)
+  status       TaskStatus? @default(PENDING)
+  assignedTo   String?    @map("assigned_to") @db.Uuid
+  dueTs        DateTime?  @map("due_ts") @db.Timestamptz
+  slaBreachTs  DateTime?  @map("sla_breach_ts") @db.Timestamptz
+  context      Json?
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  completedAt  DateTime?  @map("completed_at") @db.Timestamptz
+
+  entity       LegalEntity?    @relation(fields: [entityId], references: [entityId])
+  record       RegistryRecord? @relation(fields: [recordId], references: [recordId])
+
+  @@map("tasks")
+}
+
+model MatchCandidate {
+  candidateId      String          @id @default(dbgenerated("uuid_generate_v4()")) @map("candidate_id") @db.Uuid
+  sourceRecordId   String          @map("source_record_id") @db.Uuid
+  targetEntityId   String          @map("target_entity_id") @db.Uuid
+  score            Decimal         @db.Decimal(5, 2)
+  matchDetails     Json?           @map("match_details")
+  status           TaskStatus?     @default(PENDING)
+  reviewerId       String?         @map("reviewer_id") @db.Uuid
+  createdAt        DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  sourceRecord     RegistryRecord  @relation(fields: [sourceRecordId], references: [recordId])
+  targetEntity     LegalEntity     @relation(fields: [targetEntityId], references: [entityId])
+  decisions        MatchDecision[]
+
+  @@map("match_candidates")
+}
+
+model MatchDecision {
+  decisionId       String            @id @default(dbgenerated("uuid_generate_v4()")) @map("decision_id") @db.Uuid
+  candidateId      String?           @map("candidate_id") @db.Uuid
+  sourceRecordId   String?           @map("source_record_id") @db.Uuid
+  targetEntityId   String?           @map("target_entity_id") @db.Uuid
+  decision         MatchDecisionType
+  decidedBy        String?           @map("decided_by") @db.Uuid
+  decidedTs        DateTime?         @default(now()) @map("decided_ts") @db.Timestamptz
+  reason           String?
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz
+
+  candidate        MatchCandidate?   @relation(fields: [candidateId], references: [candidateId])
+  sourceRecord     RegistryRecord?   @relation(fields: [sourceRecordId], references: [recordId])
+  targetEntity     LegalEntity?      @relation(fields: [targetEntityId], references: [entityId])
+
+  @@map("match_decisions")
+}
+
+model NegativeMatch {
+  blockId   String   @id @default(dbgenerated("uuid_generate_v4()")) @map("block_id") @db.Uuid
+  entityAId String   @map("entity_a_id") @db.Uuid
+  entityBId String   @map("entity_b_id") @db.Uuid
+  createdBy String?  @map("created_by") @db.Uuid
+  reason    String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  entityA   LegalEntity @relation("NegativeMatchA", fields: [entityAId], references: [entityId])
+  entityB   LegalEntity @relation("NegativeMatchB", fields: [entityBId], references: [entityId])
+
+  @@unique([entityAId, entityBId])
+  @@map("negative_matches")
+}
+
+model DqRule {
+  ruleId            String      @id @default(dbgenerated("uuid_generate_v4()")) @map("rule_id") @db.Uuid
+  name              String      @db.VarChar(200)
+  description       String?
+  category          DqCategory
+  condition         Json
+  severity          QualityFlag
+  autoRemediate     Boolean?    @default(false) @map("auto_remediate")
+  remediationAction Json?       @map("remediation_action")
+  isActive          Boolean?    @default(true) @map("is_active")
+  createdAt         DateTime    @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  issues            DqIssue[]
+
+  @@map("dq_rules")
+}
+
+model DqIssue {
+  issueId         String      @id @default(dbgenerated("uuid_generate_v4()")) @map("issue_id") @db.Uuid
+  entityId        String?     @map("entity_id") @db.Uuid
+  recordId        String?     @map("record_id") @db.Uuid
+  ruleId          String?     @map("rule_id") @db.Uuid
+  category        DqCategory
+  severity        QualityFlag
+  status          TaskStatus? @default(PENDING)
+  details         Json?
+  detectedTs      DateTime?   @default(now()) @map("detected_ts") @db.Timestamptz
+  resolvedTs      DateTime?   @map("resolved_ts") @db.Timestamptz
+  resolvedBy      String?     @map("resolved_by") @db.Uuid
+  resolutionNotes String?     @map("resolution_notes")
+  createdAt       DateTime    @default(now()) @map("created_at") @db.Timestamptz
+
+  entity          LegalEntity?    @relation(fields: [entityId], references: [entityId])
+  record          RegistryRecord? @relation(fields: [recordId], references: [recordId])
+  rule            DqRule?         @relation(fields: [ruleId], references: [ruleId])
+
+  @@map("dq_issues")
+}
+
+model Document {
+  docId         String      @id @default(dbgenerated("uuid_generate_v4()")) @map("doc_id") @db.Uuid
+  entityId      String?     @map("entity_id") @db.Uuid
+  recordId      String?     @map("record_id") @db.Uuid
+  filename      String      @db.VarChar(500)
+  mimeType      String      @map("mime_type") @db.VarChar(100)
+  fileSizeBytes BigInt?     @map("file_size_bytes")
+  storageUri    String      @map("storage_uri") @db.VarChar(1000)
+  checksum      String?     @db.VarChar(64)
+  uploadedBy    String?     @map("uploaded_by") @db.Uuid
+  uploadedTs    DateTime?   @default(now()) @map("uploaded_ts") @db.Timestamptz
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz
+
+  entity        LegalEntity?    @relation(fields: [entityId], references: [entityId])
+  record        RegistryRecord? @relation(fields: [recordId], references: [recordId])
+  ocrResults    OcrResult[]
+
+  @@map("documents")
+}
+
+model OcrResult {
+  ocrId           String    @id @default(dbgenerated("uuid_generate_v4()")) @map("ocr_id") @db.Uuid
+  docId           String    @map("doc_id") @db.Uuid
+  extractedData   Json?     @map("extracted_data")
+  confidenceScores Json?    @map("confidence_scores")
+  processingTimeMs Int?     @map("processing_time_ms")
+  ocrEngine       String?   @map("ocr_engine") @db.VarChar(50)
+  status          String?   @default("COMPLETED") @db.VarChar(50)
+  errorMessage    String?   @map("error_message")
+  reviewedBy      String?   @map("reviewed_by") @db.Uuid
+  reviewedTs      DateTime? @map("reviewed_ts") @db.Timestamptz
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  document        Document  @relation(fields: [docId], references: [docId])
+
+  @@map("ocr_results")
+}
+
+model EntityEvent {
+  eventId        String          @id @default(dbgenerated("uuid_generate_v4()")) @map("event_id") @db.Uuid
+  entityId       String          @map("entity_id") @db.Uuid
+  eventType      EntityEventType @map("event_type")
+  eventDate      DateTime?       @map("event_date") @db.Date
+  details        Json?
+  sourceId       String?         @map("source_id") @db.Uuid
+  sourceRecordId String?         @map("source_record_id") @db.Uuid
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz
+
+  entity         LegalEntity     @relation(fields: [entityId], references: [entityId])
+  source         RegistrySource? @relation(fields: [sourceId], references: [sourceId])
+  sourceRecord   RegistryRecord? @relation(fields: [sourceRecordId], references: [recordId])
+
+  @@map("entity_events")
+}
+
+model EntityRelationship {
+  relId               String           @id @default(dbgenerated("uuid_generate_v4()")) @map("rel_id") @db.Uuid
+  parentEntityId      String           @map("parent_entity_id") @db.Uuid
+  childEntityId       String           @map("child_entity_id") @db.Uuid
+  relationshipType    RelationshipType @map("relationship_type")
+  ownershipPercentage Decimal?         @map("ownership_percentage") @db.Decimal(5, 2)
+  validFrom           DateTime?        @map("valid_from") @db.Date
+  validTo             DateTime?        @map("valid_to") @db.Date
+  sourceId            String?          @map("source_id") @db.Uuid
+  createdAt           DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  parentEntity        LegalEntity      @relation("ParentRel", fields: [parentEntityId], references: [entityId])
+  childEntity         LegalEntity      @relation("ChildRel", fields: [childEntityId], references: [entityId])
+  source              RegistrySource?  @relation(fields: [sourceId], references: [sourceId])
+
+  @@map("entity_relationships")
+}
+
+model Alert {
+  alertId        String        @id @default(dbgenerated("uuid_generate_v4()")) @map("alert_id") @db.Uuid
+  alertType      String        @map("alert_type") @db.VarChar(100)
+  severity       AlertSeverity
+  sourceId       String?       @map("source_id") @db.Uuid
+  title          String        @db.VarChar(500)
+  message        String?
+  context        Json?
+  acknowledgedBy String?       @map("acknowledged_by") @db.Uuid
+  acknowledgedTs DateTime?     @map("acknowledged_ts") @db.Timestamptz
+  resolvedTs     DateTime?     @map("resolved_ts") @db.Timestamptz
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz
+
+  source         RegistrySource? @relation(fields: [sourceId], references: [sourceId])
+
+  @@map("alerts")
+  @@index([severity])
+}
+
+model IngestionJob {
+  jobId            String          @id @default(dbgenerated("uuid_generate_v4()")) @map("job_id") @db.Uuid
+  sourceId         String?         @map("source_id") @db.Uuid
+  jobType          String          @map("job_type") @db.VarChar(50)
+  status           String?         @default("PENDING") @db.VarChar(50)
+  startedTs        DateTime?       @map("started_ts") @db.Timestamptz
+  completedTs      DateTime?       @map("completed_ts") @db.Timestamptz
+  recordsProcessed Int?            @default(0) @map("records_processed")
+  recordsCreated   Int?            @default(0) @map("records_created")
+  recordsUpdated   Int?            @default(0) @map("records_updated")
+  errors           Int?            @default(0)
+  errorDetails     Json?           @map("error_details")
+  createdAt        DateTime        @default(now()) @map("created_at") @db.Timestamptz
+
+  source           RegistrySource? @relation(fields: [sourceId], references: [sourceId])
+
+  @@map("ingestion_jobs")
+  @@index([sourceId])
+}
+
+model Snapshot {
+  snapshotId  String      @id @default(dbgenerated("uuid_generate_v4()")) @map("snapshot_id") @db.Uuid
+  entityId    String      @map("entity_id") @db.Uuid
+  asOfTs      DateTime    @map("as_of_ts") @db.Timestamptz
+  data        Json
+  checksum    String      @db.VarChar(64)
+  signature   String?
+  generatedBy String?     @map("generated_by") @db.Uuid
+  generatedTs DateTime?   @default(now()) @map("generated_ts") @db.Timestamptz
+  
+  entity      LegalEntity @relation(fields: [entityId], references: [entityId])
+
+  @@map("snapshots")
+}

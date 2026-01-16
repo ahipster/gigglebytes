@@ -1,0 +1,14 @@
+{
+    "name": "@grip/shared",
+    "version": "0.1.0",
+    "private": true,
+    "main": "src/index.ts",
+    "devDependencies": {
+        "prisma": "^5.22.0",
+        "typescript": "^5"
+    },
+    "dependencies": {
+        "@prisma/client": "^5.22.0",
+        "zod": "^4.3.5"
+    }
+}

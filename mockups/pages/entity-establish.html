@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Establish Entity - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar (Identical) -->
+    <aside class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white">G
+            </div>
+            <span class="text-lg font-bold tracking-wide">GRIP</span>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">📊</span> Dashboard
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium bg-slate-800 text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> Entity Search
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> Lineage Mapping
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">📋</span> Task Queue
+                    <span
+                        class="ml-auto bg-blue-600 text-white py-0.5 px-2 rounded-full text-[10px] font-bold">12</span>
+                </a>
+
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider font-bold">
+                        Configuration</p>
+                </div>
+
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">💚</span> Sources
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">✅</span> DQ Rules
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8">
+            <div class="flex items-center">
+                <a href="entity-search.html" class="mr-4 text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <h1 class="text-xl font-semibold text-gray-900">Establish New Entity</h1>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8 bg-gray-50 flex justify-center">
+
+            <div class="w-full max-w-5xl space-y-8">
+
+                <!-- Progress Stepper (4 Steps) -->
+                <div class="mb-12">
+                    <div class="flex items-center justify-between px-10">
+                        <div class="flex items-center text-blue-600">
+                            <div id="step-circle-1"
+                                class="w-8 h-8 rounded-full border-2 border-blue-600 flex items-center justify-center font-bold text-sm bg-blue-50">
+                                1</div>
+                            <span id="step-label-1" class="ml-3 font-semibold text-blue-600">Identify</span>
+                        </div>
+                        <div id="step-line-1" class="flex-1 mx-4 h-0.5 bg-gray-200"></div>
+
+                        <div class="flex items-center text-gray-400">
+                            <div id="step-circle-2"
+                                class="w-8 h-8 rounded-full border-2 border-gray-200 flex items-center justify-center font-bold text-sm">
+                                2</div>
+                            <span id="step-label-2" class="ml-3 font-semibold">Resolution</span>
+                        </div>
+                        <div id="step-line-2" class="flex-1 mx-4 h-0.5 bg-gray-200"></div>
+
+                        <div class="flex items-center text-gray-400">
+                            <div id="step-circle-3"
+                                class="w-8 h-8 rounded-full border-2 border-gray-200 flex items-center justify-center font-bold text-sm">
+                                3</div>
+                            <span id="step-label-3" class="ml-3 font-semibold">Manual Changes</span>
+                        </div>
+                        <div id="step-line-3" class="flex-1 mx-4 h-0.5 bg-gray-200"></div>
+
+                        <div class="flex items-center text-gray-400">
+                            <div id="step-circle-4"
+                                class="w-8 h-8 rounded-full border-2 border-gray-200 flex items-center justify-center font-bold text-sm">
+                                4</div>
+                            <span id="step-label-4" class="ml-3 font-semibold">Review & Create</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step Contents -->
+                <div id="step-contents">
+
+                    <!-- Step 1: Identify & Search -->
+                    <div id="step-1" class="step-pane">
+                        <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                            <div class="px-10 py-8 border-b border-gray-100 bg-gray-50/50">
+                                <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Identify Entity</h2>
+                                <p class="text-sm text-gray-500 mt-2">Search global registries to find and link your new
+                                    entity.</p>
+                            </div>
+                            <div class="p-10 space-y-8">
+                                <!-- Search Box -->
+                                <div>
+                                    <label
+                                        class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-tight">Entity
+                                        Name</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-gray-400 text-lg">🔍</span>
+                                        </div>
+                                        <input type="text"
+                                            class="block w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all text-lg font-medium"
+                                            placeholder="e.g. Acme Corporation PLC">
+                                    </div>
+                                </div>
+
+                                <!-- Search Results (Mock) -->
+                                <div class="space-y-4">
+                                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Registry
+                                        Matches</h3>
+                                    <!-- Result Card 1 -->
+                                    <div
+                                        class="group flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-400 hover:shadow-md cursor-pointer transition-all">
+                                        <div class="flex items-center space-x-4">
+                                            <div
+                                                class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">
+                                                GLEIF</div>
+                                            <div>
+                                                <p class="font-bold text-gray-900 group-hover:text-blue-600">Acme
+                                                    Corporation PLC</p>
+                                                <p class="text-xs text-gray-500">London, UK • Needs Resolution</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            class="px-4 py-2 bg-gray-50 text-gray-600 rounded-lg text-xs font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors">Select</button>
+                                    </div>
+                                    <!-- Result Card 2 -->
+                                    <div
+                                        class="group flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-400 hover:shadow-md cursor-pointer transition-all">
+                                        <div class="flex items-center space-x-4">
+                                            <div
+                                                class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">
+                                                CH</div>
+                                            <div>
+                                                <p class="font-bold text-gray-900 group-hover:text-blue-600">Acme Corp
+                                                    Ltd</p>
+                                                <p class="text-xs text-gray-500">Cardiff, UK • Active</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            class="px-4 py-2 bg-gray-50 text-gray-600 rounded-lg text-xs font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-10 py-6 bg-gray-50 border-t border-gray-100 flex justify-end">
+                                <button onclick="goToStep(2)"
+                                    class="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all active:scale-95">Proceed
+                                    to Resolution</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Entity Resolution (NEW) -->
+                    <div id="step-2" class="step-pane hidden">
+                        <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                            <div class="px-10 py-8 border-b border-gray-100 bg-gray-50/50">
+                                <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Entity Resolution</h2>
+                                <p class="text-sm text-gray-500 mt-2">We found potential matches in our internal
+                                    database. Please resolve before creating.</p>
+                            </div>
+                            <div class="p-10 space-y-6">
+                                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start">
+                                    <span class="text-amber-500 text-xl mr-3">⚠️</span>
+                                    <div>
+                                        <p class="text-sm font-bold text-amber-800">Potential Duplicate Detected</p>
+                                        <p class="text-xs text-amber-700 mt-1">An entity with a similar name and
+                                            registration number already exists.</p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-6">
+                                    <!-- Existing Entity -->
+                                    <div class="border-2 border-blue-500 bg-blue-50/20 rounded-xl p-6 relative">
+                                        <div
+                                            class="absolute -top-3 left-6 px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">
+                                            Existing Record</div>
+                                        <h3 class="font-bold text-gray-900 text-lg">Acme Corp Ltd.</h3>
+                                        <div class="space-y-2 mt-4 text-sm">
+                                            <p><span class="text-gray-500">GRIP ID:</span> <span
+                                                    class="font-mono">E-10293</span></p>
+                                            <p><span class="text-gray-500">Country:</span> UK</p>
+                                            <p><span class="text-gray-500">Status:</span> Active</p>
+                                        </div>
+                                        <button
+                                            class="w-full mt-6 py-2 bg-white border border-blue-200 rounded-lg text-blue-700 font-bold hover:bg-blue-50">Merge
+                                            with Existing</button>
+                                    </div>
+
+                                    <!-- New Entity Candidate -->
+                                    <div class="border-2 border-gray-200 rounded-xl p-6 relative hover:border-gray-300">
+                                        <div
+                                            class="absolute -top-3 left-6 px-3 py-1 bg-gray-500 text-white text-xs font-bold rounded-full">
+                                            Incoming Data</div>
+                                        <h3 class="font-bold text-gray-900 text-lg">Acme Corporation PLC</h3>
+                                        <div class="space-y-2 mt-4 text-sm">
+                                            <p><span class="text-gray-500">Source:</span> GLEIF</p>
+                                            <p><span class="text-gray-500">Country:</span> UK</p>
+                                            <p><span class="text-gray-500">LEI:</span> 5493001...</p>
+                                        </div>
+                                        <button onclick="goToStep(3)"
+                                            class="w-full mt-6 py-2 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 shadow-md">Create
+                                            New Entity</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-10 py-6 bg-gray-50 border-t border-gray-100 flex justify-between">
+                                <button onclick="goToStep(1)"
+                                    class="text-sm font-bold text-gray-400 hover:text-gray-600">Back</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Manual Changes (Renamed) -->
+                    <div id="step-3" class="step-pane hidden">
+                        <div class="grid grid-cols-12 gap-8 h-[calc(100vh-280px)]">
+                            <div
+                                class="col-span-4 overflow-y-auto bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+                                <div class="border-b border-gray-100 pb-4">
+                                    <h3 class="font-bold text-gray-900">Manual Changes</h3>
+                                    <p class="text-xs text-gray-400 mt-1">Review and override field values.</p>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Legal
+                                        Name</label>
+                                    <input type="text" value="Acme Corporation PLC"
+                                        class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-bold text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Registration
+                                        ID</label>
+                                    <input type="text" value="5493001..."
+                                        class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono text-gray-600 focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Incorporation
+                                        Date</label>
+                                    <input type="date" value="2005-03-15"
+                                        class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+                            </div>
+                            <div
+                                class="col-span-8 bg-slate-900 rounded-xl overflow-hidden shadow-2xl flex flex-col items-center justify-center text-slate-500 relative">
+                                <div class="absolute top-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded">LEI
+                                    Certificate.pdf</div>
+                                <span class="text-4xl mb-4">📄</span>
+                                <p class="font-bold">Document Viewer (Interactive)</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between pt-6">
+                            <button onclick="goToStep(2)"
+                                class="text-sm font-bold text-gray-400 hover:text-gray-600">Back</button>
+                            <button onclick="goToStep(4)"
+                                class="px-8 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 active:scale-95 transition-all">Next:
+                                Review</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Review & Create (Enhanced) -->
+                    <div id="step-4" class="step-pane hidden">
+                        <div
+                            class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden max-w-4xl mx-auto">
+                            <div
+                                class="px-10 py-8 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Review & Create</h2>
+                                    <p class="text-sm text-gray-500 mt-2">Final validation before record creation.</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <span
+                                        class="px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full flex items-center">
+                                        <span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span> 1 Critical Issue
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="p-8">
+                                <!-- Validation Warnings -->
+                                <div class="mb-8 p-4 bg-red-50 border border-red-200 rounded-xl">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h3 class="text-sm font-medium text-red-800">Blocking Issues Detected</h3>
+                                            <div class="mt-2 text-sm text-red-700">
+                                                <ul class="list-disc pl-5 space-y-1">
+                                                    <li><strong>Missing Ultimate Beneficial Owner (UBO)</strong>:
+                                                        Entities in this jurisdiction require at least 1 UBO.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="mt-4">
+                                                <button onclick="goToStep(3)"
+                                                    class="text-sm font-medium text-red-800 hover:text-red-900 underline">Return
+                                                    to Manual Changes to fix</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Identity Card -->
+                                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                                    <div
+                                        class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                                        <h3 class="font-semibold text-gray-900">Identity Details</h3>
+                                        <span
+                                            class="text-xs text-green-600 bg-green-50 px-2 py-1 rounded font-medium">Verified
+                                            by
+                                            GLEIF</span>
+                                    </div>
+                                    <div class="p-6 grid grid-cols-2 gap-x-8 gap-y-6">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Legal
+                                                Name</label>
+                                            <p class="text-gray-900 font-medium select-all">Acme Corporation</p>
+                                            <div class="flex items-center space-x-2 mt-1 text-[10px] text-gray-400">
+                                                <span
+                                                    class="bg-gray-100 px-1 rounded border border-gray-200 text-gray-600 font-medium">Source:
+                                                    GLEIF</span>
+                                                <span class="flex items-center ml-2 text-blue-500">
+                                                    <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                        </path>
+                                                    </svg>
+                                                    Linked to Document
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Trading
+                                                Name</label>
+                                            <p class="text-gray-900 select-all">Acme Global</p>
+                                            <div class="flex items-center space-x-2 mt-1 text-[10px] text-blue-600">
+                                                <span
+                                                    class="bg-blue-50 px-1 rounded border border-blue-100 font-bold uppercase">Manual
+                                                    Override</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Legal
+                                                Personality</label>
+                                            <p class="text-gray-900">Yes <span
+                                                    class="text-[10px] text-gray-400 ml-1">(Independent Entity)</span>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Domicile</label>
+                                            <p class="text-gray-900">United States <span
+                                                    class="text-xs text-gray-400">(DE)</span></p>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Legal
+                                                Form</label>
+                                            <p class="text-gray-900">Corporation (Inc.)</p>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Status</label>
+                                            <p class="text-gray-900">Active</p>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Registered
+                                                Address</label>
+                                            <p class="text-gray-900 leading-relaxed text-sm">1200 Market Street, Suite
+                                                500<br>Wilmington, DE 19801<br>USA</p>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Mailing
+                                                Address</label>
+                                            <p class="text-gray-900 leading-relaxed text-sm italic text-gray-500">Same
+                                                as
+                                                Registered</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Investment Fund Section -->
+                                <div
+                                    class="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden ring-1 ring-blue-50 mb-6">
+                                    <div
+                                        class="px-6 py-4 border-b border-blue-100 flex justify-between items-center bg-blue-50/30">
+                                        <div class="flex items-center">
+                                            <span class="mr-2 text-xl">🏦</span>
+                                            <h3 class="font-semibold text-gray-900">Investment Fund Information</h3>
+                                        </div>
+                                        <span
+                                            class="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded uppercase tracking-wider">Fund
+                                            Entity</span>
+                                    </div>
+                                    <div class="p-6 grid grid-cols-2 gap-x-8 gap-y-6">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Jurisdiction</label>
+                                            <p class="text-gray-900 font-medium">Luxembourg <span
+                                                    class="text-xs text-gray-400 font-normal ml-1">LU</span></p>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Governed
+                                                By Law</label>
+                                            <p class="text-gray-900">Luxembourg Fund Law</p>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Fund
+                                                Legal Structure</label>
+                                            <p class="text-gray-900">RAIF <span
+                                                    class="text-[10px] text-gray-400 block mt-0.5">Reserved Alternative
+                                                    Investment Fund</span></p>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Fund
+                                                Governance Structure</label>
+                                            <p class="text-gray-900">SICAV <span
+                                                    class="text-[10px] text-gray-400 block mt-0.5">Société
+                                                    d'Investissement à
+                                                    Capital Variable</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Identifiers Card -->
+                                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                                        <h3 class="font-semibold text-gray-900">Identifiers</h3>
+                                    </div>
+                                    <div class="divide-y divide-gray-100">
+                                        <div class="px-6 py-4 flex justify-between items-start hover:bg-gray-50">
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-900">Global LEI</p>
+                                                <p class="text-xs text-gray-500">GLEIF Registration Number</p>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <code
+                                                    class="text-sm bg-gray-100 px-2 py-1 rounded mr-3 uppercase font-mono">5493001KJTIIGC8Y1R12</code>
+                                                <span class="text-green-600 text-[10px] font-bold">VERIFIED</span>
+                                            </div>
+                                        </div>
+                                        <div class="px-6 py-4 flex justify-between items-start hover:bg-gray-50">
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-900">US EIN</p>
+                                                <p class="text-xs text-gray-500">IRS Registered #</p>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <code
+                                                    class="text-sm bg-gray-100 px-2 py-1 rounded mr-3 uppercase font-mono">12-3456789</code>
+                                                <span class="text-gray-400 text-[10px]">UNVERIFIED</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- DQ Resolution Table -->
+                                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                                    <div
+                                        class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                        <h3 class="font-bold text-gray-900">Data Quality Issue Resolution</h3>
+                                        <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded">1
+                                            Critical Issue</span>
+                                    </div>
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Severity</th>
+                                                <th
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Issue</th>
+                                                <th
+                                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span
+                                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Critical</span>
+                                                </td>
+                                                <td class="px-6 py-4 text-sm text-gray-900">Missing Ultimate Beneficial
+                                                    Owner (UBO)</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                    <button class="text-blue-600 hover:text-blue-900 font-bold"
+                                                        onclick="goToStep(3)">Fix Now</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span
+                                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Warning</span>
+                                                </td>
+                                                <td class="px-6 py-4 text-sm text-gray-900">Address format mismatch
+                                                    (Postcode)</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                    <button class="text-gray-400 hover:text-gray-600">Dismiss</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div
+                                    class="px-10 py-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                                    <button onclick="goToStep(3)"
+                                        class="text-sm font-bold text-gray-400 hover:text-gray-600">Back</button>
+                                    <button disabled
+                                        class="px-8 py-3 bg-gray-300 text-gray-500 rounded-xl text-sm font-bold cursor-not-allowed"
+                                        title="Resolve blocking issues to proceed">
+                                        Create Entity (Blocked)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <script>
+                        function goToStep(stepNum) {
+                            // Hide all steps
+                            document.querySelectorAll('.step-pane').forEach(s => s.classList.add('hidden'));
+                            // Show target step
+                            document.getElementById(`step-${stepNum}`).classList.remove('hidden');
+
+                            // Update Stepper UI (Supporting 4 steps)
+                            for (let i = 1; i <= 4; i++) {
+                                const circle = document.getElementById(`step-circle-${i}`);
+                                const label = document.getElementById(`step-label-${i}`);
+                                const line = document.getElementById(`step-line-${i}`);
+
+                                if (i < stepNum) {
+                                    // Completed
+                                    circle.className = "w-8 h-8 rounded-full border-2 border-blue-600 flex items-center justify-center font-bold text-sm bg-blue-600 text-white";
+                                    circle.innerHTML = '✓';
+                                    label.classList.add('text-blue-600', 'font-black');
+                                    label.classList.remove('text-gray-400');
+                                    if (line) line.classList.add('bg-blue-600');
+                                    if (line) line.classList.remove('bg-gray-200');
+                                } else if (i === stepNum) {
+                                    // Active
+                                    circle.className = "w-8 h-8 rounded-full border-2 border-blue-600 flex items-center justify-center font-bold text-sm bg-blue-50 text-blue-600";
+                                    circle.innerHTML = i;
+                                    label.classList.add('text-blue-600', 'font-black');
+                                    label.classList.remove('text-gray-400', 'font-semibold');
+                                    label.classList.add('font-black');
+                                    if (line) line.classList.remove('bg-blue-600');
+                                    if (line) line.classList.add('bg-gray-200');
+                                } else {
+                                    // Pending
+                                    circle.className = "w-8 h-8 rounded-full border-2 border-gray-200 flex items-center justify-center font-bold text-sm text-gray-400";
+                                    circle.innerHTML = i;
+                                    label.classList.remove('text-blue-600', 'font-black');
+                                    label.classList.add('text-gray-400');
+                                    if (line) line.classList.remove('bg-blue-600');
+                                }
+                            }
+                        }
+                    </script>
+
+                </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

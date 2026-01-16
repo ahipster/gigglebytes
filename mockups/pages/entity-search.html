@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entity Search - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar (Identical to Dashboard) -->
+    <aside class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white">G
+            </div>
+            <span class="text-lg font-bold tracking-wide">GRIP</span>
+        </div>
+
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">📊</span> Dashboard
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium bg-slate-800 text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> Entity Search
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> Lineage Mapping
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">📋</span> Task Queue
+                    <span
+                        class="ml-auto bg-blue-600 text-white py-0.5 px-2 rounded-full text-[10px] font-bold">12</span>
+                </a>
+
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider font-bold">
+                        Configuration</p>
+                </div>
+
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">💚</span> Sources
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">✅</span> DQ Rules
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center">
+                <div
+                    class="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold">
+                    AU</div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-white">Admin User</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8">
+            <h1 class="text-xl font-semibold text-gray-900">Entity Search</h1>
+            <a href="entity-establish.html"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium shadow-sm transition-all focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Establish New Entity
+            </a>
+        </header>
+
+        <!-- Search Area -->
+        <main class="flex-1 overflow-y-auto p-8 bg-gray-50">
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="md:col-span-2 relative">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Entity Name</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500 text-lg">🔍</span>
+                            </div>
+                            <input type="text" id="entity-name-input"
+                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="e.g. Acme Corporation" value="">
+                        </div>
+
+                        <!-- Autocomplete Dropdown Mockup (Initially Hidden) -->
+                        <div id="search-autocomplete-dropdown"
+                            class="absolute z-10 left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 divide-y divide-gray-100 hidden">
+                            <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                                <div class="flex justify-between">
+                                    <span class="font-medium text-gray-900">Acme Corporation</span>
+                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Active</span>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-0.5">US-DE • 5493001KJTIIGC8Y1R12</div>
+                            </a>
+                            <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                                <div class="flex justify-between">
+                                    <span class="font-medium text-gray-900">Acme Holdings Ltd</span>
+                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Active</span>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-0.5">GB • 01234567</div>
+                            </a>
+                            <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                                <div class="flex justify-between">
+                                    <span class="font-medium text-gray-900">Acme International GmbH</span>
+                                    <span class="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">Dissolved</span>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-0.5">DE • HRB 987654</div>
+                            </a>
+                            <div class="px-4 py-2 bg-gray-50 text-xs text-center text-gray-500 rounded-b-lg">
+                                Press Enter to search all sources...
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Jurisdiction</label>
+                        <select
+                            class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option>All Jurisdictions</option>
+                            <option>United States</option>
+                            <option>United Kingdom</option>
+                            <option>Germany</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Registration Number / ID</label>
+                        <input type="text" id="reg-number-input"
+                            class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="e.g. 549300...">
+                    </div>
+                </div>
+                <div class="mt-4 flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
+                    <div class="flex flex-col sm:flex-row sm:space-x-6 space-y-2 sm:space-y-0">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox"
+                                class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                checked>
+                            <span class="ml-2 text-sm text-gray-700">Fetch from Live registries</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox"
+                                class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Include direct records</span>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <button class="text-gray-600 hover:text-gray-900 font-medium text-sm">Clear Filters</button>
+                        <button
+                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium shadow-sm transition-all focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 whitespace-nowrap">
+                            Search Entities
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Table -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                    <h3 class="font-medium text-gray-700">Displaying 3 results</h3>
+                    <div class="flex space-x-2">
+                        <button class="p-1 hover:bg-gray-200 rounded"><span class="text-gray-500">⬇️
+                                Export</span></button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Legal Name</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Jurisdiction</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Identifiers</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    DQ Score</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+
+                            <!-- Row 1 -->
+                            <tr onclick="window.location.href='entity-detail.html'"
+                                class="hover:bg-blue-50 transition-colors group cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
+                                            A</div>
+                                        <div class="ml-4">
+                                            <div
+                                                class="text-sm font-medium text-gray-900 group-hover:text-blue-600 flex items-center">
+                                                Acme Corporation
+                                                <span
+                                                    class="ml-2 bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded border border-blue-200 uppercase tracking-tight">Party</span>
+                                            </div>
+                                            <div class="text-sm text-gray-500">Trading as: Acme Global</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <span class="text-xl mr-2">🇺🇸</span>
+                                        <span class="text-sm text-gray-900">United States</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500">Delaware</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900"><span
+                                            class="font-mono text-xs bg-gray-100 px-1 py-0.5 rounded">LEI</span>
+                                        549300...
+                                    </div>
+                                    <div class="text-sm text-gray-500 mt-1"><span
+                                            class="font-mono text-xs bg-gray-100 px-1 py-0.5 rounded">EIN</span>
+                                        12-3456789
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Active
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-16 bg-gray-200 rounded-full h-1.5 mr-2">
+                                            <div class="bg-green-500 h-1.5 rounded-full" style="width: 95%"></div>
+                                        </div>
+                                        <span class="text-xs font-medium text-gray-600">95/100</span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 2 -->
+                            <tr onclick="window.location.href='entity-detail.html'"
+                                class="hover:bg-blue-50 transition-colors group cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 font-bold">
+                                            A</div>
+                                        <div class="ml-4">
+                                            <div
+                                                class="text-sm font-medium text-gray-900 group-hover:text-blue-600 flex items-center">
+                                                Acme Holdings Ltd
+                                                <span
+                                                    class="ml-2 bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded border border-blue-200 uppercase tracking-tight">Party</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <span class="text-xl mr-2">🇬🇧</span>
+                                        <span class="text-sm text-gray-900">United Kingdom</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900"><span
+                                            class="font-mono text-xs bg-gray-100 px-1 py-0.5 rounded">CRN</span>
+                                        01234567
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Active
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-16 bg-gray-200 rounded-full h-1.5 mr-2">
+                                            <div class="bg-yellow-400 h-1.5 rounded-full" style="width: 78%"></div>
+                                        </div>
+                                        <span class="text-xs font-medium text-gray-600">78/100</span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 3 -->
+                            <tr onclick="window.location.href='entity-detail.html?tab=registry'"
+                                class="hover:bg-blue-50 transition-colors group cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 font-bold">
+                                            A</div>
+                                        <div class="ml-4">
+                                            <div
+                                                class="text-sm font-medium text-gray-900 group-hover:text-blue-600 flex items-center">
+                                                Acme GmbH
+                                                <span
+                                                    class="ml-2 bg-gray-100 text-gray-600 text-[10px] font-bold px-1.5 py-0.5 rounded border border-gray-200 uppercase tracking-tight">Registry
+                                                    Record</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <span class="text-xl mr-2">🇩🇪</span>
+                                        <span class="text-sm text-gray-900">Germany</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900"><span
+                                            class="font-mono text-xs bg-gray-100 px-1 py-0.5 rounded">HRB</span> 987654
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        Dissolved
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-16 bg-gray-200 rounded-full h-1.5 mr-2">
+                                            <div class="bg-green-500 h-1.5 rounded-full" style="width: 99%"></div>
+                                        </div>
+                                        <span class="text-xs font-medium text-gray-600">99/100</span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Footer -->
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                    <div class="flex-1 flex justify-between sm:hidden">
+                        <a href="#"
+                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Previous </a>
+                        <a href="#"
+                            class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Next </a>
+                    </div>
+                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                Showing <span class="font-semibold">1</span> to <span class="font-semibold">10</span> of
+                                <span class="font-semibold">97</span> results
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <!-- Results per page -->
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">Show</span>
+                                <select
+                                    class="text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                    <option>10</option>
+                                    <option>25</option>
+                                    <option>50</option>
+                                </select>
+                            </div>
+
+                            <!-- Page buttons -->
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                                aria-label="Pagination">
+                                <a href="#"
+                                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <span class="sr-only">Previous</span>
+                                    <span class="text-lg">‹</span>
+                                </a>
+                                <!-- Highlighted "showcase" state -->
+                                <a href="#" aria-current="page"
+                                    class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-bold">
+                                    1 </a>
+                                <a href="#"
+                                    class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                    2 </a>
+                                <a href="#"
+                                    class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium">
+                                    3 </a>
+                                <span
+                                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                                    ... </span>
+                                <a href="#"
+                                    class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium">
+                                    10 </a>
+                                <a href="#"
+                                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <span class="sr-only">Next</span>
+                                    <span class="text-lg">›</span>
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Simple Debounce Simulation for Autocomplete
+        const entityNameInput = document.getElementById('entity-name-input');
+        const regNumberInput = document.getElementById('reg-number-input');
+        const dropdown = document.getElementById('search-autocomplete-dropdown');
+
+        let debounceTimer;
+
+        const handleTyping = (e) => {
+            clearTimeout(debounceTimer);
+            const val = e.target.value;
+
+            if (val.length >= 2) {
+                // Mimic network latency / debounce
+                debounceTimer = setTimeout(() => {
+                    dropdown.classList.remove('hidden');
+                }, 400);
+            } else {
+                dropdown.classList.add('hidden');
+            }
+        };
+
+        entityNameInput.addEventListener('input', handleTyping);
+        regNumberInput.addEventListener('input', handleTyping);
+
+        // Hide dropdown on click outside
+        document.addEventListener('click', (e) => {
+            if (!entityNameInput.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
+
+</body>
+
+</html>

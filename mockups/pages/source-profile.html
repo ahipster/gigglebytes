@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Source Detail - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar (Same as Dashboard) -->
+    <aside class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white">G
+            </div>
+            <span class="text-lg font-bold tracking-wide">GRIP</span>
+        </div>
+
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">📊</span> Dashboard
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> Entity Search
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> Lineage Mapping
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">📋</span> Task Queue
+                    <span
+                        class="ml-auto bg-blue-600 text-white py-0.5 px-2 rounded-full text-[10px] font-bold">12</span>
+                </a>
+
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider font-bold">
+                        Configuration</p>
+                </div>
+
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium bg-slate-800 text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">💚</span> Sources
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">✅</span> DQ Rules
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8">
+            <div class="flex items-center">
+                <a href="source-detail.html" class="mr-4 text-gray-400 hover:text-gray-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <h1 class="text-xl font-bold text-gray-900 flex items-center">
+                    <span id="header-country" class="font-normal text-gray-500 mr-2">Global /</span>
+                    <span id="header-name">Legal Entity Identifier (LEI)</span>
+                </h1>
+                <span class="ml-4 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                    Active Integration
+                </span>
+            </div>
+            <!-- Buttons Removed -->
+        </header>
+
+        <!-- Scrollable Content -->
+        <main class="flex-1 overflow-y-auto p-8 bg-gray-50">
+
+            <div class="grid grid-cols-3 gap-8">
+
+                <!-- Left Column: Health & Stats -->
+                <div class="col-span-2 space-y-8">
+
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                            <p class="text-xs font-bold text-gray-500 uppercase">Data Quality Score</p>
+                            <div class="mt-2 flex items-baseline">
+                                <span class="text-3xl font-bold text-blue-600">98.5%</span>
+                                <span class="ml-2 text-xs font-medium text-emerald-600">▲ 0.2%</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-1 mt-3">
+                                <div class="bg-blue-600 h-1 rounded-full" style="width: 98.5%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                            <p class="text-xs font-bold text-gray-500 uppercase">Records Ingested</p>
+                            <div class="mt-2 flex items-baseline">
+                                <span class="text-3xl font-bold text-gray-900">2.4M</span>
+                                <span class="ml-2 text-xs font-medium text-gray-400">Total</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-3">Last ingest: 15 mins ago</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                            <p class="text-xs font-bold text-gray-500 uppercase">Open Issues</p>
+                            <div class="mt-2 flex items-baseline">
+                                <span class="text-3xl font-bold text-gray-900">4</span>
+                                <span class="ml-2 text-xs font-medium text-amber-600">Warnings</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-3">0 Critical Failures</p>
+                        </div>
+                    </div>
+
+                    <!-- Lineage / Governance -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 bg-slate-50 flex justify-between items-center">
+                            <h3 class="font-bold text-gray-800">Attribute Lineage & Governance</h3>
+                            <a href="lineage-overview.html"
+                                class="text-xs text-blue-600 font-bold uppercase hover:underline">View Full
+                                Map</a>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-gray-500 mb-4">Attributes populated by this source in the Golden
+                                Record:</p>
+                            <div class="space-y-4">
+                                <!-- Attribute Item -->
+                                <div
+                                    class="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:border-blue-100 hover:bg-blue-50 transition-colors">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-1.5 bg-indigo-100 text-indigo-600 rounded">🔤</div>
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900">Legal Name</p>
+                                            <p class="text-xs text-gray-500">priority: <span
+                                                    class="font-mono text-gray-700">HIGH (1)</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-6">
+                                        <span
+                                            class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">Trusted</span>
+                                        <div class="text-right">
+                                            <p class="text-xs text-gray-400">Last Contribution</p>
+                                            <p class="text-xs font-medium text-gray-700">Today, 09:41</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Attribute Item -->
+                                <div
+                                    class="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:border-blue-100 hover:bg-blue-50 transition-colors">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-1.5 bg-indigo-100 text-indigo-600 rounded">🏢</div>
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900">Registered Address</p>
+                                            <p class="text-xs text-gray-500">priority: <span
+                                                    class="font-mono text-gray-700">MEDIUM (2)</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-6">
+                                        <span
+                                            class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">Trusted</span>
+                                        <div class="text-right">
+                                            <p class="text-xs text-gray-400">Last Contribution</p>
+                                            <p class="text-xs font-medium text-gray-700">Yesterday</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Attribute Item -->
+                                <div
+                                    class="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:border-blue-100 hover:bg-blue-50 transition-colors">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-1.5 bg-orange-100 text-orange-600 rounded">📅</div>
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900">Formation Date</p>
+                                            <p class="text-xs text-gray-500">priority: <span
+                                                    class="font-mono text-gray-700">LOW (3)</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-6">
+                                        <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">Validation
+                                            Req.</span>
+                                        <div class="text-right">
+                                            <p class="text-xs text-gray-400">Last Contribution</p>
+                                            <p class="text-xs font-medium text-gray-700">2 days ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Tasks Table -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                            <h3 class="font-bold text-gray-800">Related Quality Tasks</h3>
+                            <a href="task-queue.html" class="text-sm text-blue-600 hover:text-blue-700">View All</a>
+                        </div>
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        ID</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Issue</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status</th>
+                                    <th
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50 cursor-pointer transition-colors"
+                                    onclick="window.location.href='manage-task.html?id=T-3992'">
+                                    <td class="px-6 py-4 whitespace-nowrap text-xs font-mono text-gray-500">T-3992</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">Missing formation date for 12 records
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">In
+                                            Progress</span></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><span
+                                            class="text-blue-600 hover:text-blue-900">Resolve</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 cursor-pointer transition-colors"
+                                    onclick="window.location.href='manage-task.html?id=T-3995'">
+                                    <td class="px-6 py-4 whitespace-nowrap text-xs font-mono text-gray-500">T-3995</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">Unexpected char encoding in Name field
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Open</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><span
+                                            class="text-blue-600 hover:text-blue-900">Resolve</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Metadata & Config -->
+                <div class="col-span-1 space-y-6">
+
+                    <!-- Metadata Box -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                        <h3 class="font-bold text-gray-900 mb-4">Registry Metadata</h3>
+                        <div class="space-y-4 text-sm">
+                            <div class="grid grid-cols-2 gap-2 pb-2 border-b border-gray-100">
+                                <span class="text-gray-500">Type</span>
+                                <span class="font-semibold text-gray-900" id="meta-type">Entity Identifier</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 pb-2 border-b border-gray-100">
+                                <span class="text-gray-500">Coverage</span>
+                                <span class="font-semibold text-gray-900" id="meta-coverage">Global</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 pb-2 border-b border-gray-100">
+                                <span class="text-gray-500">API Access</span>
+                                <span class="font-semibold text-gray-900 text-green-600">Free / Public</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 pb-2 border-b border-gray-100">
+                                <span class="text-gray-500">Update Freq</span>
+                                <span class="font-semibold text-gray-900">Daily (Delta)</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <span class="text-gray-500">Format</span>
+                                <span class="font-mono text-xs bg-gray-100 px-2 py-1 rounded">XML / JSON</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connectivity Box -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                        <h3 class="font-bold text-gray-900 mb-4">Connection Status</h3>
+
+                        <div class="flex items-center mb-4">
+                            <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse mr-2"></div>
+                            <span class="text-sm font-medium text-gray-700">Operational</span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="text-xs">
+                                <p class="text-gray-500 mb-1">Latency</p>
+                                <div class="w-full bg-gray-100 rounded h-1.5">
+                                    <div class="bg-blue-400 h-1.5 rounded" style="width: 25%"></div>
+                                </div>
+                                <p class="text-right text-gray-400 mt-1">124ms</p>
+                            </div>
+                            <div class="text-xs">
+                                <p class="text-gray-500 mb-1">API Rate Limit</p>
+                                <div class="w-full bg-gray-100 rounded h-1.5">
+                                    <div class="bg-indigo-400 h-1.5 rounded" style="width: 10%"></div>
+                                </div>
+                                <p class="text-right text-gray-400 mt-1">450 / 5000 req</p>
+                            </div>
+                        </div>
+
+                        <button
+                            class="w-full mt-6 px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 font-medium hover:bg-gray-50">Test
+                            Connection</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Simple script to populate data from URL params for demo purposes
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
+        const country = urlParams.get('country');
+
+        if (name) document.getElementById('header-name').textContent = name;
+        if (country) {
+            document.getElementById('header-country').textContent = country + " / ";
+            document.getElementById('meta-coverage').textContent = country;
+        }
+    </script>
+</body>
+
+</html>

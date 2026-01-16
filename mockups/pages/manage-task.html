@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Task - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .diff-added {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .diff-removed {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+            text-decoration: line-through;
+        }
+
+        .diff-changed-from {
+            color: #991b1b;
+            text-decoration: line-through;
+            font-weight: 500;
+        }
+
+        .diff-changed-to {
+            color: #065f46;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar (Standard) -->
+    <aside class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white">G
+            </div>
+            <span class="text-lg font-bold tracking-wide">GRIP</span>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto font-sans">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">📊</span> Dashboard
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> Entity Search
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> Lineage Mapping
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium bg-slate-800 text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">📋</span> Task Queue
+                    <span
+                        class="ml-auto bg-blue-600 text-white py-0.5 px-2 rounded-full text-[10px] font-bold">12</span>
+                </a>
+
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider font-bold">
+                        Configuration</p>
+                </div>
+
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">💚</span> Sources
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
+                    <span class="mr-3 text-xl">✅</span> DQ Rules
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <!-- Top Resolution Bar -->
+        <header
+            class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 flex-shrink-0 z-10 shadow-sm">
+            <div class="flex items-center">
+                <a href="task-queue.html" class="mr-4 text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="text-sm font-black text-blue-600 uppercase tracking-widest mb-0.5">Task T-1082:
+                        Resolution Required</h1>
+                    <p class="text-lg font-bold text-gray-900 leading-none">Data Conflict: Acme Corporation PLC</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <span
+                    class="px-4 py-2 border border-blue-200 bg-blue-50 text-blue-700 rounded-xl text-sm font-bold">Requires
+                    Approval</span>
+                <button
+                    class="px-6 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 shadow-md shadow-blue-500/20 active:scale-95 transition-all">Approve
+                    & Publish</button>
+            </div>
+        </header>
+
+        <!-- Task Content -->
+        <main class="flex-1 overflow-hidden flex bg-gray-50/50">
+            <!-- Left: Task Overview & Context -->
+            <div class="w-80 border-r border-gray-200 bg-white overflow-y-auto p-6 hidden lg:block">
+                <h2 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-6">Conflict Summary</h2>
+
+                <div class="space-y-6">
+                    <div class="p-4 bg-red-50 rounded-xl border border-red-100">
+                        <div class="flex items-center text-red-600 mb-2">
+                            <span class="mr-2 text-lg">⚠️</span>
+                            <span class="text-xs font-bold uppercase">Critical Mismatch</span>
+                        </div>
+                        <p class="text-xs text-red-800 leading-relaxed font-medium">Primary name from Registry (CH)
+                            differs significantly from secondary name in GLEIF.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Priority</label>
+                            <span
+                                class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-[10px] font-black uppercase">High</span>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">SLA Deadline</label>
+                            <p class="text-sm font-semibold text-gray-900">4h 12m remaining</p>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Detected via</label>
+                            <p class="text-sm font-semibold text-gray-900 italic">Auto-Standardization Engine</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-100">
+                        <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 text-center">
+                            Suggested Resolution</h3>
+                        <div class="p-4 bg-blue-50/50 rounded-xl border border-blue-100 border-dashed">
+                            <p class="text-xs text-blue-800 text-center font-medium leading-relaxed italic">"Trust
+                                Registry (CH) for UK-domiciled entities; GLEIF mapping appears stale."</p>
+                            <div class="flex justify-center mt-3">
+                                <span class="bg-blue-600 text-white text-[8px] px-2 py-0.5 rounded-full font-bold">AI
+                                    ASSISTANT</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: The Comparison (The embedded Diff View) -->
+            <div class="flex-1 overflow-y-auto p-12">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Instruction Card -->
+                    <div
+                        class="mb-8 p-4 bg-white border border-gray-200 rounded-2xl flex items-center justify-between shadow-sm">
+                        <div class="flex items-center">
+                            <div
+                                class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mr-4">
+                                💡</div>
+                            <p class="text-sm font-medium text-slate-700">Select the correct value to promote to the
+                                <span class="font-bold text-slate-900 border-b-2 border-blue-200">Golden Record</span>.
+                            </p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <span
+                                class="text-[10px] font-black text-amber-600 uppercase bg-amber-50 px-3 py-1 rounded-lg border border-amber-100 ring-1 ring-amber-200/50">
+                                <span class="mr-1">🛡️</span> 4-Eyes Principle Required
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <!-- Diff Legend (Condensed) -->
+                        <div class="px-8 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+                            <div class="flex space-x-6 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                <div class="flex items-center">
+                                    <span class="w-2.5 h-2.5 bg-red-100 border border-red-200 rounded-sm mr-2"></span>
+                                    Source A (Registry)
+                                </div>
+                                <div class="flex items-center">
+                                    <span
+                                        class="w-2.5 h-2.5 bg-emerald-100 border border-emerald-200 rounded-sm mr-2"></span>
+                                    Source B (GLEIF)
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="toggleView()"
+                                    class="px-2 py-1 bg-white border border-gray-200 rounded text-[10px] font-bold text-gray-500 hover:bg-gray-50 transition-all uppercase shadow-sm">Toggle
+                                    View</button>
+                            </div>
+                        </div>
+
+                        <!-- The Comparison Table -->
+                        <div id="view-comparison" class="divide-y divide-gray-100">
+                            <!-- Conflict: Legal Name -->
+                            <div class="grid grid-cols-12 p-8 bg-blue-50/20 ring-1 ring-inset ring-blue-100/50">
+                                <div
+                                    class="col-span-3 text-[10px] font-black text-blue-600 uppercase tracking-widest self-center">
+                                    Legal Name</div>
+                                <div class="col-span-8 flex flex-col space-y-4">
+                                    <div
+                                        class="flex items-center p-4 border border-red-200 bg-red-50/50 rounded-xl relative group cursor-pointer hover:ring-2 hover:ring-red-400 transition-all">
+                                        <div class="flex-1">
+                                            <p class="text-sm font-bold text-red-900">Acme Corporation PLC</p>
+                                            <p class="text-[10px] text-red-700 uppercase font-bold mt-1 tracking-tight">
+                                                Source: Companies House (UK)</p>
+                                        </div>
+                                        <div
+                                            class="absolute -right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button
+                                                class="bg-red-600 text-white p-1 rounded-full shadow-lg font-bold">✓</button>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="flex items-center p-4 border border-emerald-200 bg-emerald-50/50 rounded-xl relative group cursor-pointer hover:ring-2 hover:ring-emerald-400 transition-all">
+                                        <div class="flex-1">
+                                            <p class="text-sm font-bold text-emerald-900 italic">Acme Global Growth (UK)
+                                                Ltd.</p>
+                                            <p
+                                                class="text-[10px] text-emerald-700 uppercase font-bold mt-1 tracking-tight">
+                                                Source: GLEIF Global</p>
+                                        </div>
+                                        <div
+                                            class="absolute -right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button
+                                                class="bg-emerald-600 text-white p-1 rounded-full shadow-lg font-bold">✓</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-span-1 self-center text-center">
+                                    <span class="text-red-500 text-xl font-bold">≠</span>
+                                </div>
+                            </div>
+
+                            <!-- Conflict: Reg Number -->
+                            <div class="grid grid-cols-12 p-8">
+                                <div
+                                    class="col-span-3 text-[10px] font-black text-gray-400 uppercase tracking-widest self-center">
+                                    Reg Number</div>
+                                <div class="col-span-8 space-y-3">
+                                    <div class="flex items-center p-3 border border-gray-100 bg-gray-50 rounded-lg">
+                                        <p class="text-sm font-mono font-bold text-gray-900">01234567</p>
+                                        <span class="ml-auto text-[9px] font-black text-gray-400 uppercase">A
+                                            Only</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center p-3 border border-gray-200 border-dashed rounded-lg opacity-40">
+                                        <p class="text-sm italic text-gray-400">Missing in source B</p>
+                                    </div>
+                                </div>
+                                <div class="col-span-1 self-center text-center">
+                                    <span class="text-amber-500 text-xl font-bold">?</span>
+                                </div>
+                            </div>
+
+                            <!-- Match: Jurisdiction -->
+                            <div class="grid grid-cols-12 p-8 opacity-40 group hover:opacity-100 transition-opacity">
+                                <div
+                                    class="col-span-3 text-[10px] font-black text-gray-400 uppercase tracking-widest self-center">
+                                    Jurisdiction</div>
+                                <div class="col-span-8">
+                                    <div class="flex items-center space-x-3">
+                                        <p class="text-sm font-bold text-gray-900">United Kingdom</p>
+                                        <span
+                                            class="text-[10px] font-black text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded uppercase font-bold">Full
+                                            Match</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-1 self-center text-center">
+                                    <span class="text-emerald-500 text-xl">✓</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- The Golden Record View (Initially Hidden) -->
+                        <div id="view-golden" class="hidden p-12 bg-white">
+                            <div
+                                class="max-w-md mx-auto space-y-8 bg-gray-50 p-8 rounded-2xl border-2 border-dashed border-blue-200 relative">
+                                <div
+                                    class="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-blue-200">
+                                    PROPOSED GOLDEN RECORD</div>
+
+                                <div class="text-center pt-4">
+                                    <span class="text-xs font-black text-gray-400 uppercase tracking-widest">Legal
+                                        Name</span>
+                                    <h2 class="text-xl font-black text-slate-900 mt-1">Acme Corporation PLC</h2>
+                                    <p class="text-[10px] text-blue-600 font-bold uppercase mt-1 italic tracking-tight">
+                                        Source: Promotion from Registry (CH)</p>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-8 text-center">
+                                    <div>
+                                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Reg
+                                            Number</span>
+                                        <p class="text-sm font-bold text-slate-900 mt-1">01234567</p>
+                                    </div>
+                                    <div>
+                                        <span
+                                            class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Jurisdiction</span>
+                                        <p class="text-sm font-bold text-slate-900 mt-1">United Kingdom</p>
+                                    </div>
+                                </div>
+
+                                <div class="pt-6 border-t border-gray-100 text-center">
+                                    <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Quality
+                                        Expectation</span>
+                                    <div class="flex items-center justify-center space-x-2 mt-2">
+                                        <div class="flex space-x-1">
+                                            <div class="w-4 h-1 bg-green-500 rounded-full"></div>
+                                            <div class="w-4 h-1 bg-green-500 rounded-full"></div>
+                                            <div class="w-4 h-1 bg-green-500 rounded-full"></div>
+                                            <div class="w-4 h-1 bg-green-500 rounded-full"></div>
+                                            <div class="w-4 h-1 bg-gray-200 rounded-full"></div>
+                                        </div>
+                                        <span
+                                            class="text-xs font-black text-green-600 uppercase tracking-widest">94/100</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Discussion / Audit Log for this task -->
+                    <div class="mt-8 space-y-4">
+                        <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">Task Activity
+                        </h3>
+                        <div class="bg-white rounded-2xl border border-gray-200 p-6 flex items-start space-x-4">
+                            <div
+                                class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-[10px]">
+                                SY</div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-slate-800">System - <span
+                                        class="font-normal text-gray-500">Jan 16, 09:12 AM</span></p>
+                                <p class="text-xs text-gray-600 mt-1">Automatic verification failed. Name similarity
+                                    index <span class="font-bold text-red-600">42%</span> (Threshold: 85%). Task created
+                                    for Human-in-the-Loop review.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>
