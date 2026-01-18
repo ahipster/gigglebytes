@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upwards Hierarchy - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .step-line::before {
+            content: '';
+            position: absolute;
+            left: 1.25rem;
+            top: 2rem;
+            bottom: -1rem;
+            width: 2px;
+            background-color: #e2e8f0;
+        }
+
+        .step-last::before {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white shrink-0">
+                G</div>
+            <span class="text-lg font-bold tracking-wide truncate">GRIP</span>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📊</span> <span class="truncate">Dashboard</span>
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> <span class="truncate">Entity Search</span>
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> <span class="truncate">Lineage Mapping</span>
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📋</span> <span class="truncate">Task Queue</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuration</p>
+                </div>
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">💚</span> <span class="truncate">Sources</span>
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">✅</span> <span class="truncate">DQ Rules</span>
+                </a>
+                <a href="er-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔗</span> <span class="truncate">ER Rules</span>
+                </a>
+                <a href="survivorship-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🏆</span> <span class="truncate">Survivorship</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System</p>
+                </div>
+                <a href="audit-log.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📜</span> <span class="truncate">Audit Log</span>
+                </a>
+                <a href="user-management.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">👤</span> <span class="truncate">Users</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center">
+                <div
+                    class="h-8 w-8 rounded-full bg-blue-500 border border-blue-400/30 flex items-center justify-center text-[10px] font-bold shadow-md">
+                    AU</div>
+                <div class="ml-3 truncate">
+                    <p class="text-xs font-bold text-white truncate">Admin User</p>
+                    <p class="text-[10px] text-slate-400 truncate">Governance Ops</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+                const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+                sidebarLinks.forEach(link => {
+                    if (link.getAttribute('href') === currentPath) {
+                        link.classList.add('bg-slate-800', 'text-white');
+                        link.classList.remove('text-slate-300');
+                    } else {
+                        link.classList.remove('bg-slate-800', 'text-white');
+                        link.classList.add('text-slate-300');
+                    }
+                });
+            });
+        </script>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <!-- Top Bar -->
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 flex-shrink-0">
+            <div class="flex items-center">
+                <h1 class="text-lg font-semibold text-gray-900">Upwards Corporate Hierarchy</h1>
+            </div>
+            <button onclick="window.history.back()"
+                class="px-5 py-2 border border-slate-300 rounded-lg text-sm font-medium bg-white hover:bg-slate-50 transition-colors">Back</button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-12 bg-gray-50 flex justify-center">
+            <div
+                class="max-w-3xl mx-auto w-full bg-white rounded-2xl shadow-xl border border-gray-200 flex flex-col overflow-hidden">
+                <!-- Header -->
+                <header class="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">Upwards Corporate Hierarchy</h1>
+                        <p class="text-sm text-gray-500">Linear ownership chain to Global Ultimate Parent</p>
+                    </div>
+                    <button onclick="window.close(); window.history.back();"
+                        class="p-2 hover:bg-gray-200 rounded-full transition-colors">
+                        <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </button>
+                </header>
+
+                <!-- Legend -->
+                <div
+                    class="px-8 py-3 bg-white border-b border-gray-100 flex space-x-6 text-[10px] font-bold uppercase tracking-wider">
+                    <div class="flex items-center">
+                        <span class="w-3 h-3 bg-yellow-400 rounded-full mr-2"></span>
+                        <span class="text-yellow-700">Global Ultimate</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-3 h-3 bg-blue-600 rounded-full mr-2"></span>
+                        <span class="text-blue-700">Domestic Ultimate</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-2 h-2 bg-gray-300 rounded-full mr-2"></span>
+                        <span class="text-gray-400">Intermediate</span>
+                    </div>
+                </div>
+
+                <!-- Scrollable Tree Area -->
+                <main class="flex-1 overflow-y-auto p-12 bg-white">
+                    <div class="space-y-12">
+
+                        <!-- 1. Global Ultimate Parent -->
+                        <div class="relative step-line pl-12">
+                            <div
+                                class="absolute left-0 w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold z-10 shadow-md">
+                                AG
+                            </div>
+                            <div class="p-4 border border-yellow-200 bg-yellow-50 rounded-xl max-w-md">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h4 class="text-sm font-bold text-gray-900">Acme Group Global SE</h4>
+                                    <span class="text-[9px] font-black text-yellow-600 uppercase">Global Ultimate</span>
+                                </div>
+                                <p class="text-xs text-gray-600">United States • DE-549300... (LEI)</p>
+                                <div class="mt-2 text-[10px] text-yellow-700 font-medium">Headquarters / Top Level
+                                    Entity</div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Domestic Ultimate Parent -->
+                        <div class="relative step-line pl-12">
+                            <div
+                                class="absolute left-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold z-10 shadow-sm">
+                                AU
+                            </div>
+                            <div
+                                class="p-4 border border-blue-200 bg-blue-50/30 rounded-xl max-w-md ring-1 ring-blue-100">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h4 class="text-sm font-bold text-gray-900">Acme US Holdings LLC</h4>
+                                    <span class="text-[9px] font-black text-blue-600 uppercase">Domestic Ultimate</span>
+                                </div>
+                                <p class="text-xs text-gray-600">United States • DE-4789531 (Local ID)</p>
+                                <div class="mt-2 text-[10px] text-blue-600 font-medium italic">Owned by: Acme Group
+                                    Global SE
+                                    (100%)</div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Intermediate Parent -->
+                        <div class="relative step-line pl-12">
+                            <div
+                                class="absolute left-1 w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 font-bold z-10 text-xs">
+                                AM
+                            </div>
+                            <div class="p-4 bg-white border border-gray-200 rounded-xl max-w-md">
+                                <h4 class="text-sm font-bold text-gray-900">Acme Midstream Services</h4>
+                                <p class="text-xs text-gray-500">United States • Intermediate Holding</p>
+                                <div class="mt-2 text-[10px] text-gray-400">Owned by: Acme US Holdings LLC (100%)</div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Immediate Parent -->
+                        <div class="relative step-line pl-12">
+                            <div
+                                class="absolute left-1 w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 font-bold z-10 text-xs">
+                                A
+                            </div>
+                            <div class="p-4 bg-white border border-gray-200 rounded-xl max-w-md">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h4 class="text-sm font-bold text-gray-900">Acme Global Holdings Inc.</h4>
+                                    <span class="text-[9px] font-bold text-gray-400 uppercase">Direct Parent</span>
+                                </div>
+                                <p class="text-xs text-gray-500">United States • Ownership: 100%</p>
+                            </div>
+                        </div>
+
+                        <!-- 5. Current Entity (Target) -->
+                        <div id="current-entity" class="relative step-last pl-12">
+                            <div
+                                class="absolute left-0 w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white font-bold z-10 shadow-lg ring-4 ring-white">
+                                AC
+                            </div>
+                            <div
+                                class="p-4 bg-slate-900 text-white rounded-xl max-w-md shadow-2xl border-4 border-white">
+                                <h4 class="text-sm font-bold">Acme Corporation</h4>
+                                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mt-1">CURRENT
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </main>
+
+                <!-- Footer Actions -->
+                <footer class="px-8 py-4 bg-gray-50 border-t border-gray-100 flex justify-end space-x-4">
+                    <button onclick="window.history.back()"
+                        class="px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-100">Close
+                        Hierarchy</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // Auto-scroll to current entity on load
+    window.onload = function () {
+        const current = document.getElementById('current-entity');
+        if (current) {
+            current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    };
+</script>
+</body>
+
+</html>

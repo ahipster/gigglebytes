@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Rule - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .code-editor {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden text-slate-900">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white shrink-0">
+                G</div>
+            <span class="text-lg font-bold tracking-wide truncate">GRIP</span>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📊</span> <span class="truncate">Dashboard</span>
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> <span class="truncate">Entity Search</span>
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> <span class="truncate">Lineage Mapping</span>
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📋</span> <span class="truncate">Task Queue</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuration</p>
+                </div>
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">💚</span> <span class="truncate">Sources</span>
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">✅</span> <span class="truncate">DQ Rules</span>
+                </a>
+                <a href="er-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔗</span> <span class="truncate">ER Rules</span>
+                </a>
+                <a href="survivorship-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🏆</span> <span class="truncate">Survivorship</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center">
+                <div
+                    class="h-8 w-8 rounded-full bg-blue-500 border border-blue-400/30 flex items-center justify-center font-bold text-[10px] shadow-md">
+                    AU</div>
+                <div class="ml-3 truncate">
+                    <p class="text-xs font-bold text-white truncate">Admin User</p>
+                    <p class="text-[10px] text-slate-400 truncate">Governance Ops</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 flex-shrink-0">
+            <div class="flex items-center">
+                <nav class="flex text-xs text-slate-400 font-bold uppercase tracking-widest mr-6">
+                    <a href="dq-rules.html" class="hover:text-blue-600 transition-colors">DQ Configuration</a>
+                    <span class="mx-2 text-slate-300">/</span>
+                    <span id="breadcrumb-current" class="text-slate-600">Edit DQ Rule</span>
+                </nav>
+                <div class="h-6 w-px bg-gray-200 mr-6"></div>
+                <h1 id="page-title" class="text-lg font-bold text-gray-900 tracking-tight">DQ Logic: <span
+                        class="text-emerald-600">Mandatory Name Check</span></h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="history.back()"
+                    class="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors">Cancel</button>
+                <button onclick="saveRule()"
+                    class="px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all">Save
+                    Changes</button>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-hidden flex bg-slate-50">
+            <!-- Left: Rule editor -->
+            <div class="flex-1 overflow-y-auto p-12 custom-scrollbar">
+                <div class="max-w-4xl mx-auto space-y-8">
+                    <!-- Section: Logic Builder -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-gray-900">Rule Logic Builder</h3>
+                                <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest font-black">Visual
+                                    Condition
+                                    Expression</p>
+                            </div>
+                            <div class="flex p-1 bg-gray-100 rounded-lg">
+                                <button
+                                    class="px-3 py-1 text-xs font-bold rounded-md bg-white shadow-sm text-blue-600">Visual</button>
+                                <button class="px-3 py-1 text-xs font-bold rounded-md text-slate-500">Code
+                                    (JSON)</button>
+                            </div>
+                        </div>
+                        <div class="p-8 space-y-4">
+                            <!-- Rule Group -->
+                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-2">
+                                        <span
+                                            class="px-2 py-1 bg-slate-200 text-slate-600 rounded text-[10px] font-black uppercase">AND</span>
+                                        <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Global
+                                            Constraints</span>
+                                    </div>
+                                    <button class="text-slate-400 hover:text-red-500">✕</button>
+                                </div>
+
+                                <!-- Condition Root -->
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-3 group">
+                                        <div
+                                            class="h-8 w-8 bg-white border border-slate-200 rounded flex items-center justify-center text-slate-400 font-bold text-xs">
+                                            1</div>
+                                        <select
+                                            class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option>Entity.LegalName</option>
+                                            <option>Entity.RegistrationID</option>
+                                            <option>PostalAddress.City</option>
+                                        </select>
+                                        <select
+                                            class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option>Equals (Exact)</option>
+                                            <option>Fuzzy Match (Score >)</option>
+                                            <option>Starts With</option>
+                                        </select>
+                                        <input type="text" value="Incoming.LegalName"
+                                            class="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-mono text-blue-600 focus:ring-2 focus:ring-blue-500 outline-none">
+                                        <button
+                                            class="p-2 text-slate-300 hover:text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">🗑️</button>
+                                    </div>
+
+                                    <div class="flex items-center space-x-3 group">
+                                        <div
+                                            class="h-8 w-8 bg-white border border-slate-200 rounded flex items-center justify-center text-slate-400 font-bold text-xs">
+                                            2</div>
+                                        <select
+                                            class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option>Entity.RegistrationID</option>
+                                            <option>Entity.LegalName</option>
+                                            <option>PostalAddress.City</option>
+                                        </select>
+                                        <select
+                                            class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option>Equals (Exact)</option>
+                                            <option>Is Not Null</option>
+                                        </select>
+                                        <div
+                                            class="flex-1 flex items-center justify-center h-10 border border-dashed border-slate-300 rounded-lg text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                            Auto (Field Value Match)
+                                        </div>
+                                        <button
+                                            class="p-2 text-slate-300 hover:text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">🗑️</button>
+                                    </div>
+                                </div>
+
+                                <button class="text-blue-600 text-xs font-bold hover:underline py-2">+ Add
+                                    Condition</button>
+                            </div>
+
+                            <!-- Action Section -->
+                            <div class="pt-6 border-t border-gray-100">
+                                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">On Rule
+                                    Trigger</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div
+                                        class="p-4 bg-blue-50 border border-blue-100 rounded-xl relative ring-2 ring-blue-500 ring-offset-2">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-xs font-bold text-blue-700">Flag for Manual Review</span>
+                                            <input type="radio" checked name="action" class="text-blue-600">
+                                        </div>
+                                        <p class="text-[10px] text-blue-600">Creates a governance task for the data
+                                            steward team.</p>
+                                    </div>
+                                    <div
+                                        class="p-4 bg-white border border-gray-100 rounded-xl hover:border-blue-200 cursor-pointer">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-xs font-bold text-slate-700">Auto-Reject (Discard)</span>
+                                            <input type="radio" name="action" class="text-slate-300">
+                                        </div>
+                                        <p class="text-[10px] text-slate-400">Silently drops the record without
+                                            notification.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Test Section -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="bg-slate-900 px-8 py-4 flex justify-between items-center">
+                            <div class="flex items-center">
+                                <span class="text-blue-400 mr-2">⚡</span>
+                                <h3 class="text-white font-bold text-sm tracking-tight uppercase tracking-widest">Live
+                                    Dry-Run (GLEIF Example)</h3>
+                            </div>
+                            <button
+                                class="px-4 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-900/50 hover:bg-blue-500 active:scale-95 transition-all">Execute
+                                Test</button>
+                        </div>
+                        <div class="p-0 border-t border-slate-800">
+                            <div class="grid grid-cols-2">
+                                <div class="p-6 border-r border-gray-100">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span
+                                            class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Input
+                                            Registry Record</span>
+                                        <span
+                                            class="px-2 py-0.5 bg-gray-100 text-gray-500 rounded text-[9px] font-bold">GLEIF
+                                            JSON</span>
+                                    </div>
+                                    <pre
+                                        class="text-[10px] text-slate-600 font-mono leading-relaxed overflow-x-auto whitespace-pre-wrap">
+{
+  "LegalName": "Acme Holdings Ltd",
+  "Entity": {
+    "RegistrationID": "UK778899"
+  }
+}
+                                    </pre>
+                                </div>
+                                <div class="p-6 bg-slate-50/50">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span
+                                            class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Simulation
+                                            Result</span>
+                                        <span
+                                            class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-[9px] font-bold uppercase">Triggered</span>
+                                    </div>
+                                    <div class="p-4 bg-white border border-amber-200 rounded-xl shadow-sm">
+                                        <p class="text-[11px] font-bold text-amber-800 italic">"Detected 98% match on
+                                            LegalName with E-9921. Rule status: Action Required."</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Settings Sidebar -->
+            <div class="w-80 border-l border-gray-200 bg-white flex flex-col flex-shrink-0">
+                <div class="p-8 border-b border-gray-200">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 text-center">Rule
+                        Metadata</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <label
+                                class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Rule
+                                Name</label>
+                            <input type="text" id="rule-name" value="Exact Name Match"
+                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Rule
+                                Category</label>
+                            <select id="rule-category"
+                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-slate-900">
+                                <option selected>Data Quality (DQ)</option>
+                                <option disabled>Entity Resolution (ER)</option>
+                                <option disabled>Survivorship</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Severity</label>
+                            <div class="flex space-x-2">
+                                <button
+                                    class="flex-1 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700 text-[10px] font-black uppercase">High</button>
+                                <button
+                                    class="flex-1 py-2 rounded-lg border border-amber-200 bg-white text-slate-400 text-[10px] font-black uppercase">Med</button>
+                                <button
+                                    class="flex-1 py-2 rounded-lg border border-gray-100 bg-white text-slate-400 text-[10px] font-black uppercase">Low</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 flex-1 overflow-y-auto">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Version Control</h3>
+                    <div class="space-y-3">
+                        <div
+                            class="p-4 bg-blue-50 border border-blue-200 rounded-xl flex justify-between items-center group cursor-pointer ring-2 ring-blue-500">
+                            <div>
+                                <p class="text-xs font-bold text-blue-700">v1.2 (Active)</p>
+                                <p class="text-[9px] text-blue-500">Last updated today</p>
+                            </div>
+                            <span class="text-blue-500">✓</span>
+                        </div>
+                        <div
+                            class="p-4 bg-white border border-gray-100 rounded-xl flex justify-between items-center hover:border-gray-200 cursor-pointer transition-all">
+                            <div>
+                                <p class="text-xs font-bold text-slate-700">v1.3 (Unreleased)</p>
+                                <p class="text-[9px] text-slate-400 italic">No dev deployed</p>
+                            </div>
+                            <span class="text-gray-300">Next</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 border-t border-gray-100 bg-gray-50/50">
+                    <button
+                        class="w-full py-4 bg-white border border-gray-200 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 hover:border-red-200 transition-all">Archive
+                        Rule</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const mode = params.get('mode') || 'edit';
+
+            if (mode === 'new') {
+                document.getElementById('breadcrumb-current').textContent = 'Create New DQ Rule';
+                document.getElementById('page-title').innerHTML = 'Rule Editor: <span class="text-emerald-600">New DQ Rule</span>';
+                document.getElementById('rule-name').value = '';
+                document.getElementById('rule-name').placeholder = 'e.g. Mandatory LEI Check';
+            }
+        });
+
+        function saveRule() {
+            alert('Rule configuration saved and queued for deployment.');
+            location.href = 'dq-rules.html';
+        }
+    </script>
+</body>
+
+</html>

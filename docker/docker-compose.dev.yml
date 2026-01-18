@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  # Add overrides here if needed, for now sticking to defaults
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: grip_dev_password

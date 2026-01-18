@@ -66,6 +66,59 @@
 - **Status**: complete
 - **Notes**: Update required by contributor; used to keep project plan aligned with execution guidance.
 
+### 2026-01-16
+
+#### Task: Phase 0 - Project Foundation
+
+- **Files modified**:
+  - `packages/app` - Moved Next.js app here
+  - `packages/shared`, `packages/adapters` - Created new packages
+  - `docker/docker-compose.yml` - Created infrastructure config
+  - `docker/postgres/init.sql` - Created DB schema
+  - `scripts/*.sh` - Created setup/reset scripts
+  - `package.json`, `pnpm-workspace.yaml` - Configured monorepo
+- **What changed**: Restructured project into monorepo, set up Docker environment with Postgres/Kafka/etc., and implemented initial DB schema.
+- **Status**: complete
+- **Tests**: Setup script created, but Docker daemon connection failed during verification.
+
+### 2026-01-16
+
+#### Task: Phase 1 (Week 3) - Core UI Mockups
+
+- **Files modified**:
+  - `mockups/index.html` - Created navigation hub.
+  - `mockups/*.html` - Implemented static HTML/Tailwind screens for Login, Dashboard, Search, Detail, and Establish.
+- **What changed**: Foundation complete, Mockups ready for review.
+- **Status**: complete
+- **Tests**: not applicable
+
+### 2026-01-16
+
+#### Task: Phase 1 (Week 2) - Core Shared Libraries & Adapters
+
+- **Files modified**:
+  - `packages/shared` - Implemented Zod schemas (`cdm.ts`) and Prisma client (`db.ts`).
+  - `packages/adapters` - Implemented `IRegistryAdapter` and `BaseAdapter`.
+  - `prisma/schema.prisma` - Configured Prisma schema.
+  - `prisma/seed.ts` - Seeded database.
+- **What changed**: Backend foundation active.
+- **Status**: complete
+- **Tests**: `test-db.ts` verified connection and seed data availability.
+
+### 2026-01-16
+
+#### Task: Phase 1 - Core Shared Libraries
+
+- **Files modified**:
+  - `packages/shared` - Added Zod schemas (`cdm.ts`) and Prisma client (`db.ts`, `schema.prisma`)
+  - `packages/adapters` - Added `IRegistryAdapter` and `BaseAdapter`
+  - `.env` - Added `DATABASE_URL`
+- **What changed**: Implemented core shared types, database client, and adapter framework. Verified DB connection.
+- **Status**: complete
+- **Tests**: `test-db.ts` verified connection and seed data availability.
+
+
+
 ## Architecture Notes
 
 - **Framework**: Next.js 14 with App Router

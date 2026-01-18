@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acme Corporation - Entity Detail - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Tab active state */
+        .tab-active {
+            border-bottom-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .tab-inactive {
+            border-bottom-color: transparent;
+            color: #6b7280;
+        }
+
+        .tab-inactive:hover {
+            color: #374151;
+            border-bottom-color: #d1d5db;
+        }
+
+        .pdf-vignette {
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.02) 100%);
+        }
+
+        .highlight-pulse {
+            animation: pulse-bg 2s infinite;
+        }
+
+        @keyframes pulse-bg {
+            0% {
+                background-color: rgba(59, 130, 246, 0.1);
+            }
+
+            50% {
+                background-color: rgba(59, 130, 246, 0.3);
+            }
+
+            100% {
+                background-color: rgba(59, 130, 246, 0.1);
+            }
+        }
+
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white shrink-0">
+                G</div>
+            <span class="text-lg font-bold tracking-wide truncate">GRIP</span>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📊</span> <span class="truncate">Dashboard</span>
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> <span class="truncate">Entity Search</span>
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> <span class="truncate">Lineage Mapping</span>
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📋</span> <span class="truncate">Task Queue</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuration</p>
+                </div>
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">💚</span> <span class="truncate">Sources</span>
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">✅</span> <span class="truncate">DQ Rules</span>
+                </a>
+                <a href="er-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔗</span> <span class="truncate">ER Rules</span>
+                </a>
+                <a href="survivorship-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🏆</span> <span class="truncate">Survivorship</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System</p>
+                </div>
+                <a href="audit-log.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📜</span> <span class="truncate">Audit Log</span>
+                </a>
+                <a href="user-management.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">👤</span> <span class="truncate">Users</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800 font-sans">
+            <div class="flex items-center">
+                <div
+                    class="h-8 w-8 rounded-full bg-blue-500 border border-blue-400/30 flex items-center justify-center font-bold text-[10px] shadow-md">
+                    AU</div>
+                <div class="ml-3 truncate">
+                    <p class="text-xs font-bold text-white truncate">Admin User</p>
+                    <p class="text-[10px] text-slate-400 truncate">Governance Ops</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+                const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+                sidebarLinks.forEach(link => {
+                    if (link.getAttribute('href') === currentPath) {
+                        link.classList.add('bg-slate-800', 'text-white');
+                        link.classList.remove('text-slate-300');
+                    } else {
+                        link.classList.remove('bg-slate-800', 'text-white');
+                        link.classList.add('text-slate-300');
+                    }
+                });
+            });
+        </script>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        <!-- Entity Header -->
+        <header class="bg-white border-b border-gray-200">
+            <div class="px-8 py-6">
+                <!-- Breadcrumb -->
+                <div class="flex items-center text-sm text-gray-500 mb-4">
+                    <a href="entity-search.html" class="hover:text-gray-900">Search</a>
+                    <span class="mx-2">/</span>
+                    <span class="text-gray-900 font-medium">Acme Corporation</span>
+                </div>
+
+                <div class="flex justify-between items-start">
+                    <div class="flex items-start">
+                        <div
+                            class="h-16 w-16 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 text-2xl font-bold mr-6">
+                            A</div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Acme Corporation</h1>
+                            <div class="flex items-center mt-2 space-x-4 text-sm text-gray-500">
+                                <span class="flex items-center"><span class="text-xl mr-1.5 ">🇺🇸</span> United States
+                                    (Delaware)</span>
+                                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                <span>Inc. Date: Mar 15, 2010</span>
+                                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                <span
+                                    class="px-2 py-0.5 bg-green-100 text-green-800 rounded text-xs font-semibold uppercase">Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-3">
+                        <a href="view-lineage.html"
+                            class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center">
+                            <span class="mr-2">🌲</span> View Lineage</a>
+                        <a href="edit-entity.html"
+                            class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-700 shadow-sm flex items-center">
+                            <span class="mr-2">✏️</span> Edit Entity</a>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="mt-8 border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-8">
+                        <a href="#" data-tab="overview"
+                            class="tab-active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Overview</a>
+                        <a href="#" data-tab="relationships"
+                            class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Relationships
+                            <span class="ml-2 bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">5</span></a>
+                        <a href="#" data-tab="registry"
+                            class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Registry
+                            Records <span
+                                class="ml-2 bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">3</span></a>
+                        <a href="#" data-tab="documents"
+                            class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Documents</a>
+                        <a href="#" data-tab="history"
+                            class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">History</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable content -->
+        <main class="flex-1 overflow-y-auto p-8 bg-gray-50">
+
+            <div id="main-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Center: Master Record Data -->
+                <div id="main-content" class="lg:col-span-2 space-y-6">
+
+                    <!-- Tab Content: Overview -->
+                    <div id="content-overview" class="tab-content space-y-6">
+                        <!-- Identity Card -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div
+                                class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                                <h3 class="font-semibold text-gray-900">Identity Details</h3>
+                                <span class="text-xs text-green-600 bg-green-50 px-2 py-1 rounded font-medium">Verified
+                                    by
+                                    GLEIF</span>
+                            </div>
+                            <div class="p-6 grid grid-cols-2 gap-x-8 gap-y-6">
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Legal
+                                        Name</label>
+                                    <p class="text-gray-900 font-medium select-all">Acme Corporation</p>
+                                    <div class="flex items-center space-x-2 mt-1 text-[10px] text-gray-400">
+                                        <span
+                                            class="bg-gray-100 px-1 rounded border border-gray-200 text-gray-600 font-medium">Source:
+                                            GLEIF</span>
+                                        <span>• Ed: 2025-12-01</span>
+                                        <span>• Ref: 2026-01-15</span>
+                                        <span
+                                            class="flex items-center ml-2 text-blue-500 cursor-pointer hover:underline"
+                                            onclick="switchTab('documents')">
+                                            <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                </path>
+                                            </svg>
+                                            Linked to Document
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Trading
+                                        Name</label>
+                                    <p class="text-gray-900 select-all">Acme Global</p>
+                                    <div class="flex items-center space-x-2 mt-1 text-[10px] text-blue-600">
+                                        <span
+                                            class="bg-blue-50 px-1 rounded border border-blue-100 font-bold uppercase">Manual
+                                            Override</span>
+                                        <span class="text-gray-400">• By: Admin User</span>
+                                        <span class="text-gray-400">• 2026-01-10</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Legal
+                                        Personality</label>
+                                    <p class="text-gray-900">Yes <span
+                                            class="text-[10px] text-gray-400 ml-1">(Independent Entity)</span></p>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Domicile</label>
+                                    <p class="text-gray-900">United States <span
+                                            class="text-xs text-gray-400">(DE)</span></p>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Legal
+                                        Form</label>
+                                    <p class="text-gray-900">Corporation (Inc.)</p>
+                                    <div class="flex items-center space-x-2 mt-1 text-[10px] text-gray-400">
+                                        <span
+                                            class="bg-gray-100 px-1 rounded border border-gray-200 text-gray-600 font-medium">Source:
+                                            US SEC</span>
+                                        <span>• Ed: 2025-11-20</span>
+                                        <span>• Ref: 2026-01-14</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Status</label>
+                                    <p class="text-gray-900">Active</p>
+                                    <div class="flex items-center space-x-2 mt-1 text-[10px] text-gray-400">
+                                        <span
+                                            class="bg-gray-100 px-1 rounded border border-gray-200 text-gray-600 font-medium">Source:
+                                            DE Div. Corps</span>
+                                        <span>• Ed: 2025-12-15</span>
+                                        <span>• Ref: 2026-01-15</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Registered
+                                        Address</label>
+                                    <p class="text-gray-900 leading-relaxed text-sm">1200 Market Street, Suite
+                                        500<br>Wilmington, DE 19801<br>USA</p>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Mailing
+                                        Address</label>
+                                    <p class="text-gray-900 leading-relaxed text-sm italic text-gray-500">Same as
+                                        Registered</p>
+                                </div>
+                                <div class="col-span-2">
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Industry
+                                        Classifications</label>
+                                    <div class="flex flex-wrap gap-2 mt-1">
+                                        <span
+                                            class="px-2 py-0.5 bg-gray-100 border border-gray-200 rounded text-[10px] font-medium text-gray-700">NACE:
+                                            62.01</span>
+                                        <span
+                                            class="px-2 py-0.5 bg-gray-100 border border-gray-200 rounded text-[10px] font-medium text-gray-700">SIC:
+                                            7371</span>
+                                        <span
+                                            class="px-2 py-0.5 bg-gray-100 border border-gray-200 rounded text-[10px] font-medium text-gray-700">ISIC:
+                                            6201</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Investment Fund Section -->
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden ring-1 ring-blue-50">
+                            <div
+                                class="px-6 py-4 border-b border-blue-100 flex justify-between items-center bg-blue-50/30">
+                                <div class="flex items-center">
+                                    <span class="mr-2 text-xl">🏦</span>
+                                    <h3 class="font-semibold text-gray-900">Investment Fund Information</h3>
+                                </div>
+                                <span
+                                    class="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded uppercase tracking-wider">Fund
+                                    Entity</span>
+                            </div>
+                            <div class="p-6 grid grid-cols-2 gap-x-8 gap-y-6">
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Jurisdiction</label>
+                                    <p class="text-gray-900 font-medium">Luxembourg <span
+                                            class="text-xs text-gray-400 font-normal ml-1">LU</span></p>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Governed
+                                        By Law</label>
+                                    <p class="text-gray-900">Luxembourg Fund Law</p>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Fund
+                                        Legal Structure</label>
+                                    <p class="text-gray-900">RAIF <span
+                                            class="text-[10px] text-gray-400 block mt-0.5">Reserved Alternative
+                                            Investment Fund</span></p>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Fund
+                                        Governance Structure</label>
+                                    <p class="text-gray-900">SICAV <span
+                                            class="text-[10px] text-gray-400 block mt-0.5">Société d'Investissement à
+                                            Capital Variable</span></p>
+                                </div>
+                                <div class="col-span-2">
+                                    <label
+                                        class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">EU
+                                        Fund Compliance</label>
+                                    <div class="flex items-center mt-1">
+                                        <span
+                                            class="px-2 py-0.5 bg-green-50 text-green-700 border border-green-200 rounded text-[10px] font-bold mr-2 uppercase">UCITS</span>
+                                        <span class="text-xs text-gray-500">Compliant under Directive 2009/65/EC</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Identifiers Card -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                                <h3 class="font-semibold text-gray-900">Identifiers</h3>
+                            </div>
+                            <div class="divide-y divide-gray-100">
+                                <div class="px-6 py-4 flex justify-between items-start hover:bg-gray-50">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">Global LEI</p>
+                                        <p class="text-xs text-gray-500">GLEIF Registration Number</p>
+                                        <div class="flex items-center space-x-2 mt-1 text-[10px] text-gray-400">
+                                            <span
+                                                class="bg-gray-100 px-1 rounded border border-gray-200 text-gray-600 font-medium">Source:
+                                                GLEIF</span>
+                                            <span>• Ed: 2025-12-01</span>
+                                            <span>• Ref: 2026-01-15</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <code
+                                            class="text-sm bg-gray-100 px-2 py-1 rounded mr-3 uppercase font-mono">5493001KJTIIGC8Y1R12</code>
+                                        <span class="text-green-600 text-[10px] font-bold">VERIFIED</span>
+                                    </div>
+                                </div>
+                                <div class="px-6 py-4 flex justify-between items-start hover:bg-gray-50">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">US EIN</p>
+                                        <p class="text-xs text-gray-500">IRS Registered # (US Internal Revenue Service)
+                                        </p>
+                                        <div class="flex items-center space-x-2 mt-1 text-[10px] text-gray-400">
+                                            <span
+                                                class="bg-gray-100 px-1 rounded border border-gray-200 text-gray-600 font-medium">Source:
+                                                SEC</span>
+                                            <span>• Ed: 2023-05-10</span>
+                                            <span>• Ref: 2026-01-14</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <code
+                                            class="text-sm bg-gray-100 px-2 py-1 rounded mr-3 uppercase font-mono">12-3456789</code>
+                                        <span class="text-gray-400 text-[10px]">UNVERIFIED</span>
+                                    </div>
+                                </div>
+                                <div class="px-6 py-4 flex justify-between items-start hover:bg-gray-50">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">LU Registre</p>
+                                        <p class="text-xs text-gray-500">RCS Luxembourg # (Registre de Commerce et des
+                                            Sociétés)</p>
+                                        <div class="flex items-center space-x-2 mt-1 text-[10px] text-gray-400">
+                                            <span
+                                                class="bg-blue-50 px-1 rounded border border-blue-200 text-blue-600 font-medium">Source:
+                                                LBR</span>
+                                            <span>• Ed: 2025-01-10</span>
+                                            <span>• Ref: 2026-01-15</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <code
+                                            class="text-sm bg-gray-100 px-2 py-1 rounded mr-3 uppercase font-mono">B123456</code>
+                                        <span class="text-green-600 text-[10px] font-bold">VERIFIED</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Registry Records -->
+                    <div id="content-registry" class="tab-content hidden space-y-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div
+                                class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                <h3 class="font-semibold text-gray-900">Registry Records (3)</h3>
+                            </div>
+                            <div class="divide-y divide-gray-100">
+                                <!-- Record 1 -->
+                                <div class="p-6 hover:bg-gray-50 transition-colors">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600 mr-4 font-bold">
+                                                G</div>
+                                            <div>
+                                                <h4 class="font-semibold text-gray-900">GLEIF Master Record</h4>
+                                                <p class="text-xs text-gray-500">Updated 1 day ago • Source ID:
+                                                    GLEIF-001</p>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="px-2 py-1 bg-green-100 text-green-800 rounded text-[10px] font-bold uppercase">Primary
+                                            Source</span>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4 text-sm mb-6">
+                                        <div class="bg-gray-50 p-2 rounded border border-gray-100">
+                                            <p class="text-gray-400 text-[10px] uppercase font-bold">Status</p>
+                                            <p class="text-gray-900 font-medium">ACTIVE</p>
+                                        </div>
+                                        <div class="bg-gray-50 p-2 rounded border border-gray-100">
+                                            <p class="text-gray-400 text-[10px] uppercase font-bold">Reg Date</p>
+                                            <p class="text-gray-900 font-medium">2010-03-15</p>
+                                        </div>
+                                        <div class="bg-gray-50 p-2 rounded border border-gray-100">
+                                            <p class="text-gray-400 text-[10px] uppercase font-bold">Renewal</p>
+                                            <p class="text-gray-900 font-medium">2026-03-15</p>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-gray-100 pt-4">
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                                            Relationships found in this source</p>
+                                        <div class="space-y-2">
+                                            <div
+                                                class="flex items-center justify-between p-2 bg-blue-50/50 rounded border border-blue-100">
+                                                <div class="flex items-center">
+                                                    <span class="text-blue-600 mr-2 text-xs">⬆️</span>
+                                                    <span class="text-xs font-medium text-gray-900">Acme Global Holdings
+                                                        Inc.</span>
+                                                </div>
+                                                <span class="text-[9px] font-bold text-blue-600 uppercase">Parent
+                                                    (100%)</span>
+                                            </div>
+                                            <div
+                                                class="flex items-center justify-between p-2 bg-purple-50/50 rounded border border-purple-100">
+                                                <div class="flex items-center">
+                                                    <span class="text-purple-600 mr-2 text-xs">⬇️</span>
+                                                    <span class="text-xs font-medium text-gray-900">Acme Software
+                                                        Solutions Ltd.</span>
+                                                </div>
+                                                <span
+                                                    class="text-[9px] font-bold text-purple-600 uppercase">Subsidiary</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Record 2 -->
+                                <div class="p-6 hover:bg-gray-50 transition-colors">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mr-4 font-bold">
+                                                D</div>
+                                            <div>
+                                                <h4 class="font-semibold text-gray-900">Delaware Div. of Corps</h4>
+                                                <p class="text-xs text-gray-500">Updated 2 months ago • Source ID:
+                                                    US-DE-123</p>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-[10px] font-bold uppercase">Registry</span>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4 text-sm">
+                                        <div class="bg-gray-50 p-2 rounded border border-gray-100">
+                                            <p class="text-gray-400 text-[10px] uppercase font-bold">Status</p>
+                                            <p class="text-gray-900 font-medium">GOOD STANDING</p>
+                                        </div>
+                                        <div class="bg-gray-50 p-2 rounded border border-gray-100">
+                                            <p class="text-gray-400 text-[10px] uppercase font-bold">Reg ID</p>
+                                            <p class="text-gray-900 font-medium">4789531</p>
+                                        </div>
+                                        <div class="bg-gray-50 p-2 rounded border border-gray-100">
+                                            <p class="text-gray-400 text-[10px] uppercase font-bold">Type</p>
+                                            <p class="text-gray-900 font-medium">Domestic Corp</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Relationships -->
+                    <div id="content-relationships" class="tab-content hidden space-y-6">
+
+                        <!-- Section: Legal Entity Relationships -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div
+                                class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                <h3 class="font-semibold text-gray-900">Legal Entity Relationships <span
+                                        class="text-xs text-gray-400 font-normal ml-1">(Ownership & Control)</span></h3>
+                                <div class="flex space-x-4">
+                                    <a href="view-family-tree.html"
+                                        class="text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors uppercase tracking-widest">
+                                        Full Family Tree
+                                    </a>
+                                    <a href="view-upwards-tree.html"
+                                        class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors uppercase tracking-widest">
+                                        Full Upwards Tree
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="group cursor-pointer"
+                                            onclick="location.href='entity-detail.html?entity=gup'">
+                                            <h4
+                                                class="text-[10px] font-bold text-yellow-600 uppercase tracking-widest mb-3">
+                                                Global Ultimate</h4>
+                                            <div
+                                                class="flex items-center p-3 border border-yellow-200 bg-yellow-50/40 rounded-lg ring-1 ring-yellow-100 group-hover:bg-yellow-50 group-hover:shadow-sm transition-all">
+                                                <div
+                                                    class="w-10 h-10 bg-yellow-500 text-white rounded flex items-center justify-center font-bold mr-4 shrink-0 shadow-sm">
+                                                    AG</div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-bold text-gray-900 truncate tracking-tight">
+                                                        Acme Group Global SE</p>
+                                                    <p class="text-[10px] text-yellow-700 font-medium">Global Ultimate •
+                                                        Germany</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="group cursor-pointer"
+                                            onclick="location.href='entity-detail.html?entity=dup'">
+                                            <h4
+                                                class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                                                Domestic Ultimate</h4>
+                                            <div
+                                                class="flex items-center p-3 border border-blue-200 bg-blue-50/30 rounded-lg ring-1 ring-blue-100/50 group-hover:bg-blue-50 group-hover:shadow-sm transition-all">
+                                                <div
+                                                    class="w-10 h-10 bg-blue-700 text-white rounded flex items-center justify-center font-bold mr-4 shrink-0 shadow-sm">
+                                                    AU</div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-bold text-gray-900 truncate tracking-tight">
+                                                        Acme US Holdings LLC</p>
+                                                    <p class="text-[10px] text-gray-500 font-medium">Domestic Ultimate •
+                                                        United States</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="group cursor-pointer"
+                                        onclick="location.href='entity-detail.html?entity=parent'">
+                                        <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                                            Direct Parent (25%+)</h4>
+                                        <div
+                                            class="flex items-center p-3 border border-blue-100 bg-blue-50/50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                                            <div
+                                                class="w-10 h-10 bg-blue-600 text-white rounded flex items-center justify-center font-bold mr-4">
+                                                A</div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-semibold text-gray-900">Acme Global Holdings Inc.
+                                                </p>
+                                                <p class="text-xs text-gray-500">Direct Parent • Ownership: 100%</p>
+                                            </div>
+                                            <span class="text-[10px] font-bold text-green-600">Verified</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                                            Partnerships & Joint Ventures</h4>
+                                        <ul class="space-y-2">
+                                            <li class="flex items-center justify-between p-3 border border-gray-100 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                                                onclick="location.href='entity-detail.html?entity=partnership'">
+                                                <div class="flex items-center">
+                                                    <div
+                                                        class="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-xs font-bold mr-3 text-gray-500">
+                                                        TP</div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-900">Tech Partners LP
+                                                        </p>
+                                                        <p class="text-[10px] text-gray-500">Partnership • 50% Equity
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: Fund Structure Relationships -->
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-blue-50 overflow-hidden ring-1 ring-blue-50/50">
+                            <div
+                                class="px-6 py-4 border-b border-blue-100 bg-blue-50/30 flex justify-between items-center">
+                                <h3 class="font-semibold text-gray-900">Investment Fund Structure</h3>
+                                <span
+                                    class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px] font-bold uppercase">Fund
+                                    View</span>
+                            </div>
+                            <div class="p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <!-- Umbrella/Sub-Fund -->
+                                    <div>
+                                        <h4 class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-3">
+                                            Umbrella / Sub-Fund</h4>
+                                        <div class="space-y-3">
+                                            <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 cursor-pointer hover:bg-blue-50 transition-colors group"
+                                                onclick="location.href='entity-detail.html?entity=umbrella'">
+                                                <p
+                                                    class="text-[10px] text-gray-400 font-bold uppercase mb-1 flex justify-between">
+                                                    <span>Parent Umbrella</span>
+                                                    <span
+                                                        class="text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity">View
+                                                        Details →</span>
+                                                </p>
+                                                <div class="flex items-center">
+                                                    <div
+                                                        class="w-6 h-6 bg-blue-100 text-blue-600 rounded text-[10px] flex items-center justify-center font-bold mr-2">
+                                                        U</div>
+                                                    <span class="text-sm font-medium">Acme Luxembourg SICAV</span>
+                                                </div>
+                                            </div>
+                                            <div class="p-4 bg-white">
+                                                <div class="flex justify-between items-center">
+                                                    <div>
+                                                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">
+                                                            Legal Name
+                                                        </p>
+                                                        <p class="text-sm font-semibold">Acme Corporation PLC</p>
+                                                    </div>
+                                                    <a href="view-lineage.html?field=legal-name"
+                                                        class="text-[10px] text-blue-600 font-bold hover:underline">VIEW
+                                                        LINEAGE</a>
+                                                </div>
+                                            </div>
+                                            <div class="p-4 bg-gray-50/50">
+                                                <div class="flex justify-between items-center">
+                                                    <div>
+                                                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">
+                                                            Jurisdiction</p>
+                                                        <div class="flex items-center">
+                                                            <span class="text-sm font-semibold">United Kingdom</span>
+                                                            <span class="ml-2 text-xs">🇬🇧</span>
+                                                        </div>
+                                                    </div>
+                                                    <a href="view-lineage.html?field=jurisdiction"
+                                                        class="text-[10px] text-blue-600 font-bold hover:underline">VIEW
+                                                        LINEAGE</a>
+                                                </div>
+                                            </div>
+                                            <div class="p-4 bg-white">
+                                                <div class="flex justify-between items-center">
+                                                    <div>
+                                                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">
+                                                            Global LEI
+                                                        </p>
+                                                        <p class="text-sm font-mono font-medium">5493001KJTIIGC8Y1R12
+                                                        </p>
+                                                    </div>
+                                                    <a href="view-lineage.html?field=lei"
+                                                        class="text-[10px] text-blue-600 font-bold hover:underline">VIEW
+                                                        LINEAGE</a>
+                                                </div>
+                                            </div>
+                                            <div class="p-4 bg-gray-50/50 rounded-b-xl">
+                                                <div class="flex justify-between items-center">
+                                                    <div>
+                                                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">
+                                                            Entity
+                                                            Status</p>
+                                                        <div class="flex items-center">
+                                                            <span
+                                                                class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold">ACTIVE</span>
+                                                        </div>
+                                                    </div>
+                                                    <a href="view-lineage.html?field=status"
+                                                        class="text-[10px] text-blue-600 font-bold hover:underline">VIEW
+                                                        LINEAGE</a>
+                                                </div>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-lg border border-dashed border-gray-200">
+                                                <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Peer
+                                                    Sub-Funds</p>
+                                                <ul class="text-xs space-y-1 text-gray-600">
+                                                    <li>• Acme Global Growth Fund</li>
+                                                    <li>• Acme Tech Opportunity Fund</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Master/Feeder -->
+                                    <div>
+                                        <h4 class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-3">
+                                            Master / Feeder Relationship</h4>
+                                        <div class="space-y-4">
+                                            <div class="relative pl-6 border-l-2 border-blue-200 py-1 cursor-pointer group"
+                                                onclick="location.href='entity-detail.html?entity=master'">
+                                                <div
+                                                    class="absolute -left-[5px] top-4 w-2 h-2 rounded-full bg-blue-200 group-hover:bg-blue-400 transition-colors">
+                                                </div>
+                                                <p
+                                                    class="text-[10px] text-gray-400 font-bold uppercase mb-1 flex justify-between">
+                                                    <span>Master Fund</span>
+                                                    <span
+                                                        class="text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity">View
+                                                        Details →</span>
+                                                </p>
+                                                <p
+                                                    class="text-sm font-semibold group-hover:text-blue-700 transition-colors">
+                                                    Acme Master Fund LP (Cayman)</p>
+                                            </div>
+                                            <div class="relative pl-6 py-1">
+                                                <div
+                                                    class="absolute -left-[5px] top-4 w-2 h-2 rounded-full bg-blue-600 ring-4 ring-blue-50">
+                                                </div>
+                                                <p class="text-[10px] text-blue-600 font-bold uppercase mb-1">Current
+                                                    Entity (Feeder)</p>
+                                                <p class="text-sm font-semibold text-blue-600">Acme Corporation (Feeder)
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Tab Content: Documents -->
+                    <div id="content-documents" class="tab-content hidden space-y-6">
+
+                        <!-- Top Widgets (Moved from Sidebar for space) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Data Quality Widget -->
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                                <div
+                                    class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                    <h3 class="font-semibold text-gray-900">Data Quality</h3>
+                                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Active
+                                        Verification</span>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span class="text-sm text-gray-500">Overall Score</span>
+                                        <span class="text-2xl font-bold text-green-600">95</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+                                        <div class="bg-green-600 h-2 rounded-full" style="width: 95%"></div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="flex items-start">
+                                            <svg class="w-4 h-4 text-green-500 mt-0.5 mr-2" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                            <p class="text-[11px] text-gray-600">Legal Name verified (3 sources)</p>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <svg class="w-4 h-4 text-green-500 mt-0.5 mr-2" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                            <p class="text-[11px] text-gray-600">Address standardized</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sources Widget -->
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                                    <h3 class="font-semibold text-gray-900">Contributing Sources</h3>
+                                </div>
+                                <div class="p-4">
+                                    <ul class="grid grid-cols-3 gap-2">
+                                        <li class="p-2 bg-gray-50 rounded border border-gray-100 text-center">
+                                            <p class="text-[10px] font-bold text-gray-900">GLEIF</p>
+                                            <p class="text-[8px] text-gray-500">1 day ago</p>
+                                        </li>
+                                        <li class="p-2 bg-gray-50 rounded border border-gray-100 text-center">
+                                            <p class="text-[10px] font-bold text-gray-900">SEC Edgar</p>
+                                            <p class="text-[8px] text-gray-500">3 days ago</p>
+                                        </li>
+                                        <li class="p-2 bg-gray-50 rounded border border-gray-100 text-center">
+                                            <p class="text-[10px] font-bold text-gray-900">OpenCorps</p>
+                                            <p class="text-[8px] text-gray-500">1 week ago</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Smart Discovery Search Port -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div
+                                class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                <h3 class="font-semibold text-gray-900">Document Discovery</h3>
+                                <div
+                                    class="flex items-center text-[10px] font-black text-blue-600 uppercase tracking-widest">
+                                    <span class="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse"></span>
+                                    Live Registry Search Active
+                                </div>
+                            </div>
+                            <div class="p-6 bg-slate-50/50">
+                                <div class="flex space-x-3">
+                                    <div class="flex-1 relative">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span class="text-gray-400 text-xs">🔍</span>
+                                        </div>
+                                        <input type="text"
+                                            class="block w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-all"
+                                            placeholder="Search public records, gazettes, filings..."
+                                            value="Acme Corporation Articles 2025">
+                                    </div>
+                                    <a href="entity-evidence.html"
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-sm hover:bg-blue-700 transition-all inline-block">Discover
+                                        & Link</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-[1fr,2fr] gap-6 h-[700px]">
+                            <!-- Left: Content List & Extractions -->
+                            <div class="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
+                                <!-- Section: Used Documents -->
+                                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                                    <div
+                                        class="px-4 py-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Active
+                                            Inventory</h4>
+                                    </div>
+                                    <div class="divide-y divide-gray-100">
+                                        <!-- Doc 1: Articles -->
+                                        <div class="p-4 hover:bg-blue-50/50 cursor-pointer transition-colors group active-doc border-l-4 border-blue-500"
+                                            onclick="selectDetailDoc('articles')">
+                                            <div class="flex items-start">
+                                                <div
+                                                    class="h-8 w-8 bg-red-100 rounded flex items-center justify-center text-red-600 font-bold text-[10px] mr-3 shrink-0">
+                                                    PDF</div>
+                                                <div class="flex-1 min-w-0">
+                                                    <h5 class="text-xs font-bold text-gray-900 truncate">
+                                                        Articles_of_Association_2025.pdf</h5>
+                                                    <div class="flex items-center mt-1 space-x-2">
+                                                        <span class="text-[9px] text-gray-500">Verified • 12 Jan
+                                                            2026</span>
+                                                        <span
+                                                            class="text-[8px] bg-green-100 text-green-700 px-1 rounded font-bold uppercase">Primary</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Doc 2: Registry Extract -->
+                                        <div class="p-4 hover:bg-gray-50 cursor-pointer transition-colors group border-l-4 border-transparent"
+                                            onclick="selectDetailDoc('registry')">
+                                            <div class="flex items-start">
+                                                <div
+                                                    class="h-8 w-8 bg-blue-100 rounded flex items-center justify-center text-blue-600 font-bold text-[10px] mr-3 shrink-0">
+                                                    IMG</div>
+                                                <div class="flex-1 min-w-0">
+                                                    <h5 class="text-xs font-bold text-gray-900 truncate">
+                                                        Registry_Extract_UK.png</h5>
+                                                    <div class="flex items-center mt-1 space-x-2">
+                                                        <span class="text-[9px] text-gray-500">Manual • 10 Jan
+                                                            2026</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- AI Extraction Preview (Grounding) -->
+                                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                                    id="detail-extraction-pane">
+                                    <div
+                                        class="px-4 py-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Attribute
+                                            Grounding</h4>
+                                        <span class="text-[9px] text-gray-400 italic">Linked to Articles_2025.pdf</span>
+                                    </div>
+                                    <div class="p-4 space-y-3">
+                                        <!-- Attribute Link Item -->
+                                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-blue-300 transition-all cursor-pointer group"
+                                            onclick="highlightDetailText('legal-name')">
+                                            <div class="flex justify-between items-center mb-1">
+                                                <span
+                                                    class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Legal
+                                                    Name</span>
+                                                <span class="text-[10px] text-blue-600 group-hover:underline">Verify
+                                                    👁️</span>
+                                            </div>
+                                            <p class="text-xs font-bold text-slate-800">Acme Corporation PLC</p>
+                                        </div>
+
+                                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-blue-300 transition-all cursor-pointer group"
+                                            onclick="highlightDetailText('address')">
+                                            <div class="flex justify-between items-center mb-1">
+                                                <span
+                                                    class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Registered
+                                                    Address</span>
+                                                <span class="text-[10px] text-blue-600 group-hover:underline">Verify
+                                                    👁️</span>
+                                            </div>
+                                            <p class="text-xs font-bold text-slate-800">100 Cheapside, London, EC2V 6DT
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Mini PDF Viewer Shell -->
+                            <div
+                                class="bg-slate-900 rounded-xl overflow-hidden relative flex flex-col h-full shadow-inner border border-slate-800">
+                                <div
+                                    class="px-4 py-2 bg-slate-800 flex justify-between items-center shrink-0 border-b border-slate-700">
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest"
+                                        id="detail-pdf-filename">Preview: Articles_of_Association_2025.pdf</span>
+                                </div>
+                                <div class="flex-1 bg-white overflow-y-auto p-8 scroll-smooth" id="detail-pdf-viewer">
+                                    <div
+                                        class="max-w-md mx-auto space-y-6 font-serif leading-relaxed text-gray-800 text-[10px]">
+                                        <div class="text-center mb-8">
+                                            <h1 class="text-xl font-bold uppercase tracking-tight"
+                                                id="detail-text-legal-name">
+                                                ACME CORPORATION PLC</h1>
+                                            <hr class="w-8 border-t border-gray-900 mx-auto mt-2">
+                                        </div>
+
+                                        <section>
+                                            <h2 class="text-[11px] font-bold border-b border-gray-200 pb-1 mb-2">1.
+                                                INCORPORATION</h2>
+                                            <p>The company was duly incorporated under the Companies Act 2006 on 12th
+                                                January 2018 as a public limited company.</p>
+                                        </section>
+
+                                        <section>
+                                            <h2 class="text-[11px] font-bold border-b border-gray-200 pb-1 mb-2">2.
+                                                REGISTERED OFFICE</h2>
+                                            <p>The registered office of the company is situated in England and Wales at
+                                                <span class="bg-yellow-100 px-1 border border-yellow-200 rounded"
+                                                    id="detail-text-address">100 Cheapside, London, EC2V 6DT</span>, or
+                                                such other place as the directors may from time to time determine.
+                                            </p>
+                                        </section>
+
+                                        <div
+                                            class="h-32 flex items-center justify-center text-[9px] text-gray-300 italic">
+                                            --- Page 1 of 12 ---</div>
+                                    </div>
+                                </div>
+                                <div class="absolute bottom-4 left-4 flex space-x-2">
+                                    <div
+                                        class="px-2 py-1 bg-slate-800/80 backdrop-blur rounded text-[9px] text-slate-400 border border-slate-700">
+                                        Page 1</div>
+                                    <div
+                                        class="px-2 py-1 bg-slate-800/80 backdrop-blur rounded text-[9px] text-slate-400 border border-slate-700">
+                                        125%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Tab Content: History -->
+                    <div id="content-history" class="tab-content hidden">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                                <h3 class="font-semibold text-gray-900">Audit Log / Version History</h3>
+                            </div>
+                            <div class="divide-y divide-gray-100">
+                                <div class="p-4 flex items-center">
+                                    <div class="w-2 h-2 rounded-full bg-blue-500 mr-4"></div>
+                                    <div class="flex-1">
+                                        <p class="text-sm text-gray-900"><span class="font-semibold">System
+                                                Ingestion</span> updated 3 Registry Records</p>
+                                        <p class="text-xs text-gray-500">Jan 16, 2026 09:12 AM</p>
+                                    </div>
+                                    <a href="view-diff.html?mode=history"
+                                        class="text-xs text-blue-600 hover:underline cursor-pointer">View Diff</a>
+                                </div>
+                                <div class="p-4 flex items-center">
+                                    <div class="w-2 h-2 rounded-full bg-gray-300 mr-4"></div>
+                                    <div class="flex-1">
+                                        <p class="text-sm text-gray-900"><span class="font-semibold">Admin User</span>
+                                            created manual record override</p>
+                                        <p class="text-xs text-gray-500">Dec 12, 2025 02:45 PM</p>
+                                    </div>
+                                    <a href="view-diff.html?mode=history"
+                                        class="text-xs text-blue-600 hover:underline cursor-pointer">View Diff</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right: Side Widgets -->
+                <div id="right-sidebar" class="space-y-6">
+
+                    <!-- Data Quality Widget -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                            <h3 class="font-semibold text-gray-900">Data Quality</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-gray-500">Overall Score</span>
+                                <span class="text-2xl font-bold text-green-600">95</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+                                <div class="bg-green-600 h-2 rounded-full" style="width: 95%"></div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-green-500 mt-0.5 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <p class="text-sm text-gray-600">Legal Name verified against 3 sources</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-green-500 mt-0.5 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <p class="text-sm text-gray-600">Address standardized</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-yellow-500 mt-0.5 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                        </path>
+                                    </svg>
+                                    <p class="text-sm text-gray-600">Incorporation date format varies</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sources Widget -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                            <h3 class="font-semibold text-gray-900">Contributing Sources</h3>
+                        </div>
+                        <ul class="divide-y divide-gray-100">
+                            <li class="px-6 py-3 flex justify-between items-center text-sm">
+                                <span class="text-gray-900">GLEIF</span>
+                                <span class="text-xs text-gray-500">1 day ago</span>
+                            </li>
+                            <li class="px-6 py-3 flex justify-between items-center text-sm">
+                                <span class="text-gray-900">US SEC Edgar</span>
+                                <span class="text-xs text-gray-500">3 days ago</span>
+                            </li>
+                            <li class="px-6 py-3 flex justify-between items-center text-sm">
+                                <span class="text-gray-900">OpenCorporates</span>
+                                <span class="text-xs text-gray-500">1 week ago</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Tab switching logic
+        const tabs = document.querySelectorAll('header nav a');
+        const contents = document.querySelectorAll('.tab-content');
+
+        const switchTab = (tabId) => {
+            const mainContent = document.getElementById('main-content');
+            const rightSidebar = document.getElementById('right-sidebar');
+
+            if (tabId === 'documents') {
+                mainContent.classList.remove('lg:col-span-2');
+                mainContent.classList.add('lg:col-span-3');
+                rightSidebar.classList.add('hidden');
+            } else {
+                mainContent.classList.add('lg:col-span-2');
+                mainContent.classList.remove('lg:col-span-3');
+                rightSidebar.classList.remove('hidden');
+            }
+
+            // Update Tab styles
+            tabs.forEach(t => {
+                const id = t.getAttribute('data-tab');
+                if (id === tabId) {
+                    t.classList.remove('tab-inactive');
+                    t.classList.add('tab-active');
+                } else {
+                    t.classList.remove('tab-active');
+                    t.classList.add('tab-inactive');
+                }
+            });
+
+            // Update Content visibility
+            contents.forEach(c => {
+                if (c.id === `content-${tabId}`) {
+                    c.classList.remove('hidden');
+                } else {
+                    c.classList.add('hidden');
+                }
+            });
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = tab.getAttribute('data-tab');
+                switchTab(tabId);
+                // Update URL without reload
+                history.pushState(null, '', `?tab=${tabId}`);
+            });
+        });
+
+        // Handle initial tab from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialTab = urlParams.get('tab');
+        if (initialTab && document.getElementById(`content-${initialTab}`)) {
+            switchTab(initialTab);
+        }
+
+        // New Document Tab Interactivity
+        function selectDetailDoc(type) {
+            const items = document.querySelectorAll('.active-doc');
+            items.forEach(i => i.classList.remove('active-doc', 'border-blue-500', 'bg-blue-50/50'));
+
+            const target = event.currentTarget;
+            target.classList.add('active-doc', 'border-blue-500', 'bg-blue-50/50');
+
+            const filename = target.querySelector('h5').textContent;
+            document.getElementById('detail-pdf-filename').textContent = `Preview: ${filename}`;
+        }
+
+        function highlightDetailText(fieldId) {
+            const target = document.getElementById('detail-text-' + fieldId);
+            if (!target) return;
+
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            target.classList.add('highlight-pulse', 'bg-blue-200');
+            setTimeout(() => {
+                target.classList.remove('highlight-pulse', 'bg-blue-200');
+            }, 3000);
+        }
+    </script>
+
+
+</body>
+
+
+
+</html>

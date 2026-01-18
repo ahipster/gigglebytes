@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survivorship Rules - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-item {
+            color: #cbd5e1;
+        }
+
+        .nav-item:hover {
+            background-color: #1e293b;
+            color: white;
+        }
+
+        .nav-item.active {
+            background-color: #1e293b;
+            color: white;
+        }
+
+        /* Luxury Refinements */
+        .glass-morphic {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glowing-border {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            animation: border-glow 3s infinite alternate;
+        }
+
+        @keyframes border-glow {
+            from {
+                box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+            }
+
+            to {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.7);
+            }
+        }
+
+        .sonar-pulse {
+            position: relative;
+        }
+
+        .sonar-pulse::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 9999px;
+            border: 2px solid #3b82f6;
+            animation: sonar 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+            opacity: 0;
+        }
+
+        @keyframes sonar {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        .beam-trail {
+            position: absolute;
+            pointer-events: none;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            height: 2px;
+            z-index: 50;
+            filter: blur(1px);
+            opacity: 0;
+            transition: all 0.5s ease-out;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white shrink-0">
+                G</div>
+            <span class="text-lg font-bold tracking-wide truncate">GRIP</span>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📊</span> <span class="truncate">Dashboard</span>
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> <span class="truncate">Entity Search</span>
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> <span class="truncate">Lineage Mapping</span>
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📋</span> <span class="truncate">Task Queue</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuration</p>
+                </div>
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">💚</span> <span class="truncate">Sources</span>
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">✅</span> <span class="truncate">DQ Rules</span>
+                </a>
+                <a href="er-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔗</span> <span class="truncate">ER Rules</span>
+                </a>
+                <a href="survivorship-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🏆</span> <span class="truncate">Survivorship</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System</p>
+                </div>
+                <a href="audit-log.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📜</span> <span class="truncate">Audit Log</span>
+                </a>
+                <a href="user-management.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">👤</span> <span class="truncate">Users</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center">
+                <div
+                    class="h-8 w-8 rounded-full bg-blue-500 border border-blue-400/30 flex items-center justify-center text-[10px] font-bold shadow-md">
+                    AU</div>
+                <div class="ml-3 truncate">
+                    <p class="text-xs font-bold text-white truncate">Admin User</p>
+                    <p class="text-[10px] text-slate-400 truncate">Governance Ops</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+                const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+                sidebarLinks.forEach(link => {
+                    if (link.getAttribute('href') === currentPath) {
+                        link.classList.add('bg-slate-800', 'text-white');
+                        link.classList.remove('text-slate-300');
+                    } else {
+                        link.classList.remove('bg-slate-800', 'text-white');
+                        link.classList.add('text-slate-300');
+                    }
+                });
+            });
+
+            function switchVersion(ver) {
+                const unreleasedBanner = document.getElementById('unreleased-banner');
+                const btn12 = document.getElementById('ver-v1.2');
+                const btn13 = document.getElementById('ver-v1.3');
+
+                if (ver === 'v1.3') {
+                    unreleasedBanner.classList.remove('hidden');
+                    btn13.className = "px-3 py-1 text-xs font-bold rounded-md transition-all bg-white text-blue-600 shadow-sm border border-gray-200";
+                    btn12.className = "px-3 py-1 text-xs font-bold rounded-md transition-all text-gray-500 hover:bg-gray-200";
+                } else {
+                    unreleasedBanner.classList.add('hidden');
+                    btn12.className = "px-3 py-1 text-xs font-bold rounded-md transition-all bg-white text-blue-600 shadow-sm border border-gray-200";
+                    btn13.className = "px-3 py-1 text-xs font-bold rounded-md transition-all text-gray-500 hover:bg-gray-200";
+                }
+            }
+        </script>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8">
+            <div class="flex items-center space-x-4">
+                <h1 class="text-xl font-bold text-gray-900">Source Precedence & Survivorship</h1>
+                <div class="h-8 w-px bg-gray-200 mx-2"></div>
+                <div class="flex items-center space-x-2 bg-gray-100 p-1 rounded-lg">
+                    <button onclick="switchVersion('v1.2')" id="ver-v1.2"
+                        class="px-3 py-1 text-xs font-bold rounded-md transition-all bg-white text-blue-600 shadow-sm border border-gray-200">v1.2
+                        (Current)</button>
+                    <button onclick="switchVersion('v1.3')" id="ver-v1.3"
+                        class="px-3 py-1 text-xs font-bold rounded-md transition-all text-gray-500 hover:bg-gray-200">v1.3
+                        (Next)</button>
+                </div>
+            </div>
+            <button
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-all">Publish
+                Strategy</button>
+        </header>
+
+        <!-- Version Status Banner -->
+        <div id="unreleased-banner" class="hidden bg-amber-50 border-b border-amber-100 px-8 py-2 flex items-center">
+            <span class="text-amber-600 mr-2 text-sm">⚠️</span>
+            <p class="text-[11px] font-bold text-amber-700 uppercase tracking-widest">Version v1.3: Unreleased, requires
+                IT deployment. Preview only.</p>
+        </div>
+
+        <main class="flex-1 overflow-y-auto p-8 bg-slate-50 custom-scrollbar">
+            <div class="max-w-6xl mx-auto space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Global Hierarchy & Strategy Matrix -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Global Hierarchy -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                            <div class="flex justify-between items-center mb-6">
+                                <div>
+                                    <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest">Global Source
+                                        Precedence</h3>
+                                    <p class="text-xs text-slate-500 mt-1">Drag to reorder. Determines the primary
+                                        winner for unmapped fields.</p>
+                                </div>
+                                <div class="flex items-center space-x-2 bg-slate-100 p-1 rounded-lg">
+                                    <button
+                                        class="px-3 py-1 text-[10px] font-black uppercase rounded bg-white shadow-sm text-blue-600 border border-blue-100">Static
+                                        Rank</button>
+                                    <button
+                                        class="px-3 py-1 text-[10px] font-black uppercase rounded text-slate-400">Trust
+                                        Score</button>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <div
+                                    class="p-3 bg-white border border-blue-200 rounded-xl flex items-center shadow-sm group cursor-move">
+                                    <span
+                                        class="text-gray-300 font-bold mr-3 text-lg group-hover:text-blue-500 transition-colors">☰</span>
+                                    <div
+                                        class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold mr-4 text-xs">
+                                        1</div>
+                                    <div class="flex-1 text-sm font-bold text-slate-900 leading-tight">Direct Entry /
+                                        CRM <span class="block text-[10px] text-blue-500 font-normal mt-0.5">Verified
+                                            Manual Overrides</span></div>
+                                    <span class="text-[10px] font-black text-blue-400 uppercase">Primary winner</span>
+                                </div>
+                                <div
+                                    class="p-3 bg-white border border-gray-100 rounded-xl flex items-center hover:border-slate-200 transition-colors cursor-move">
+                                    <span class="text-gray-300 font-bold mr-3 text-lg">☰</span>
+                                    <div
+                                        class="w-8 h-8 bg-slate-100 text-slate-700 rounded-lg flex items-center justify-center font-bold mr-4 text-xs font-sans">
+                                        2</div>
+                                    <div class="flex-1 text-sm font-medium text-slate-700">Official National Registry
+                                        <span class="block text-[10px] text-slate-400 font-normal mt-0.5">Companies
+                                            House, SEC</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="p-3 bg-white border border-gray-100 rounded-xl flex items-center hover:border-slate-200 transition-colors cursor-move">
+                                    <span class="text-gray-300 font-bold mr-3 text-lg">☰</span>
+                                    <div
+                                        class="w-8 h-8 bg-slate-100 text-slate-700 rounded-lg flex items-center justify-center font-bold mr-4 text-xs font-sans">
+                                        3</div>
+                                    <div class="flex-1 text-sm font-medium text-slate-700">GLEIF / Global LEI <span
+                                            class="block text-[10px] text-slate-400 font-normal mt-0.5">ISO 17442
+                                            Standard</span></div>
+                                </div>
+                                <div
+                                    class="p-3 bg-white border border-gray-100 rounded-xl flex items-center hover:border-slate-200 transition-colors cursor-move opacity-60">
+                                    <span class="text-gray-300 font-bold mr-3 text-lg">☰</span>
+                                    <div
+                                        class="w-8 h-8 bg-slate-50 text-slate-400 rounded-lg flex items-center justify-center font-bold mr-4 text-xs font-sans">
+                                        4</div>
+                                    <div class="flex-1 text-sm font-medium text-slate-400 italic">Bloomberg / Thompson
+                                        Reuters</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Strategy Matrix Table -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-gray-900">Field-Level Strategy Matrix</h3>
+                                    <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest font-black">Overrides
+                                        & Exceptions</p>
+                                </div>
+                                <button
+                                    class="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-bold hover:bg-blue-100 transition-colors">+
+                                    Add Exception</button>
+                            </div>
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50/50 border-b border-gray-100">
+                                    <tr>
+                                        <th
+                                            class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest w-1/3">
+                                            Target Field</th>
+                                        <th
+                                            class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                            Winning Method</th>
+                                        <th
+                                            class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                            Active Rule</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr>
+                                        <td class="px-8 py-5">
+                                            <p class="text-sm font-bold text-slate-900">Legal Name</p>
+                                            <p class="text-[10px] text-slate-400 uppercase">Entity Metadata</p>
+                                        </td>
+                                        <td class="px-8 py-5">
+                                            <div class="flex items-center">
+                                                <span
+                                                    class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[9px] font-bold uppercase mr-2 border border-indigo-100">Consensus</span>
+                                                <span class="text-[10px] text-slate-400 italic">Freq (2/3)</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-5">
+                                            <div class="flex items-center text-xs font-bold text-slate-600">
+                                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span> Active
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-8 py-5">
+                                            <p class="text-sm font-bold text-slate-900">Registered Address</p>
+                                            <p class="text-[10px] text-slate-400 uppercase">Location Data</p>
+                                        </td>
+                                        <td class="px-8 py-5">
+                                            <div class="flex items-center">
+                                                <span
+                                                    class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[9px] font-bold uppercase mr-2 border border-blue-100">Recency</span>
+                                                <span class="text-[10px] text-blue-600 font-bold">LUD Priority</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-5">
+                                            <div class="flex items-center text-xs font-bold text-slate-600">
+                                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span> Active
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-8 py-5">
+                                            <p class="text-sm font-bold text-slate-900">Country Code</p>
+                                            <p class="text-[10px] text-slate-400 uppercase">ISO Geographic</p>
+                                        </td>
+                                        <td class="px-8 py-5">
+                                            <div class="flex items-center">
+                                                <span
+                                                    class="px-2 py-0.5 bg-amber-50 text-amber-700 rounded text-[9px] font-bold uppercase mr-2 border border-amber-100">Trust
+                                                    Override</span>
+                                                <span class="text-[10px] text-slate-400">GLEIF Trusted</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-5">
+                                            <div class="flex items-center text-xs font-bold text-slate-600">
+                                                <span class="w-2 h-2 bg-amber-500 rounded-full mr-2"></span> System
+                                                Fixed
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Interactive Simulation -->
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden sticky top-8">
+                            <div class="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex flex-col space-y-3">
+                                <div class="flex items-center">
+                                    <span class="mr-2 text-blue-600">🎯</span>
+                                    <h3 class="font-bold text-xs uppercase tracking-widest text-gray-900">Survivorship
+                                        Simulator</h3>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <div>
+                                        <label
+                                            class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">1.
+                                            Select Attribute</label>
+                                        <select id="field-selector" onchange="updateSimulation()"
+                                            class="w-full bg-white text-gray-900 text-xs font-bold border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all cursor-pointer">
+                                            <option value="name">Legal Name</option>
+                                            <option value="address">Registered Address</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">2.
+                                            Record Candidates</label>
+                                        <div id="conflict-list" class="space-y-2">
+                                            <!-- Dynamic entries here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-6 bg-slate-50/30">
+                                <div id="sim-outcome" class="space-y-6">
+                                    <div>
+                                        <label
+                                            class="block text-[10px] font-black text-blue-500 uppercase tracking-widest mb-4 text-center">Outcome-Sources</label>
+
+                                        <!-- Golden Record Card -->
+                                        <div
+                                            class="bg-white border-2 border-blue-500 rounded-2xl p-6 shadow-xl shadow-blue-500/10 relative overflow-hidden group">
+                                            <div
+                                                class="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110">
+                                            </div>
+                                            <div class="relative z-10 text-center">
+                                                <p
+                                                    class="text-[9px] font-black text-blue-400 uppercase tracking-widest mb-2">
+                                                    Final Golden Value</p>
+                                                <p id="golden-value"
+                                                    class="text-base font-bold text-gray-900 tracking-tight italic">
+                                                    "Acme Holdings Ltd"</p>
+
+                                                <div
+                                                    class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-center space-x-2">
+                                                    <span id="rationale-badge"
+                                                        class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[9px] font-black uppercase border border-blue-100 italic">via
+                                                        Rank Strategy</span>
+                                                    <span class="text-[10px] text-gray-400 font-bold">•</span>
+                                                    <span id="stat-conf"
+                                                        class="text-[10px] text-gray-500 font-medium tracking-tight">98.2%
+                                                        Confidence</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Outcome Sources Lineage -->
+                                    <div class="space-y-3">
+                                        <p
+                                            class="text-[9px] font-black text-gray-400 uppercase tracking-widest flex items-center">
+                                            Verified Lineage Trace
+                                        </p>
+                                        <div id="lineage-trace"
+                                            class="space-y-3 relative pl-4 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-gray-200">
+                                            <!-- Steps injected here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const simData = {
+            name: {
+                label: "Legal Name",
+                candidates: [
+                    { val: "Acme Holdings Ltd", source: "CRM", rank: 1, winner: true },
+                    { val: "Acme Corporation", source: "GLEIF", rank: 3 },
+                    { val: "ACME CORP", source: "Registry", rank: 2 }
+                ],
+                golden: "Acme Holdings Ltd",
+                strategy: "via Global Rank",
+                confidence: "98.2% Confidence",
+                trace: [
+                    "Hierarchy Match: CRM (Rank #1) exists",
+                    "Null Check: Data present in primary source",
+                    "Logic: Rank-based override applied"
+                ]
+            },
+            address: {
+                label: "Registered Address",
+                candidates: [
+                    { val: "123 Main St, London", source: "CRM", rank: 1 },
+                    { val: "45 Business Way, London", source: "GLEIF", rank: 3 },
+                    { val: "45 Business Way, London SE1", source: "Registry", rank: 2, winner: true }
+                ],
+                golden: "45 Business Way, London SE1",
+                strategy: "via Recency (LUD)",
+                confidence: "89.5% Confidence",
+                trace: [
+                    "Comparison: Registry (2026-01-15) vs CRM (2026-01-11)",
+                    "Heuristic: LUD +4 days diff",
+                    "Logic: Recency rule triggered"
+                ]
+            }
+        };
+
+        function updateSimulation() {
+            const field = document.getElementById('field-selector').value;
+            const data = simData[field];
+
+            // Update Result Card
+            document.getElementById('golden-value').innerText = `"${data.golden}"`;
+            document.getElementById('rationale-badge').innerText = data.strategy;
+            document.getElementById('stat-conf').innerText = data.confidence;
+
+            // Update Candidate List
+            const list = document.getElementById('conflict-list');
+            list.innerHTML = '';
+            data.candidates.forEach(cand => {
+                const div = document.createElement('div');
+                div.className = `p-3 rounded-lg flex justify-between items-center border transition-all ${cand.winner ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-100 opacity-60'}`;
+                div.innerHTML = `
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-900 tracking-tight">${cand.val}</p>
+                        <p class="text-[8px] text-gray-500 uppercase font-black">Source: ${cand.source} (Rank ${cand.rank})</p>
+                    </div>
+                    ${cand.winner ? '<span class="text-xs">🏆</span>' : ''}
+                `;
+                list.appendChild(div);
+            });
+
+            // Update Lineage Trace
+            const trace = document.getElementById('lineage-trace');
+            trace.innerHTML = '';
+            data.trace.forEach((step, idx) => {
+                const div = document.createElement('div');
+                div.className = "relative";
+                div.innerHTML = `
+                    <div class="absolute -left-[20px] top-1.5 w-2 h-2 rounded-full border-2 border-white ${idx === data.trace.length - 1 ? 'bg-blue-500 shadow-sm' : 'bg-gray-300'}"></div>
+                    <p class="text-[10px] ${idx === data.trace.length - 1 ? 'text-gray-900 font-bold' : 'text-gray-500 font-medium'}">${step}</p>
+                `;
+                trace.appendChild(div);
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', updateSimulation);
+    </script>
+</body>
+
+</html>
+</body>
+
+</html>

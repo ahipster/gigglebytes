@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Queue - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .status-badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .priority-high {
+            color: #ef4444;
+            border: 1px solid #fee2e2;
+            background: #fef2f2;
+        }
+
+        .priority-med {
+            color: #f59e0b;
+            border: 1px solid #fef3c7;
+            background: #fffbeb;
+        }
+
+        .priority-low {
+            color: #6b7280;
+            border: 1px solid #f3f4f6;
+            background: #f9fafb;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white shrink-0">
+                G</div>
+            <span class="text-lg font-bold tracking-wide truncate">GRIP</span>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📊</span> <span class="truncate">Dashboard</span>
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> <span class="truncate">Entity Search</span>
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> <span class="truncate">Lineage Mapping</span>
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📋</span> <span class="truncate">Task Queue</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuration</p>
+                </div>
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">💚</span> <span class="truncate">Sources</span>
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">✅</span> <span class="truncate">DQ Rules</span>
+                </a>
+                <a href="er-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔗</span> <span class="truncate">ER Rules</span>
+                </a>
+                <a href="survivorship-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🏆</span> <span class="truncate">Survivorship</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System</p>
+                </div>
+                <a href="audit-log.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📜</span> <span class="truncate">Audit Log</span>
+                </a>
+                <a href="user-management.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">👤</span> <span class="truncate">Users</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center">
+                <div
+                    class="h-8 w-8 rounded-full bg-blue-500 border border-blue-400/30 flex items-center justify-center text-[10px] font-bold shadow-md">
+                    AU</div>
+                <div class="ml-3 truncate">
+                    <p class="text-xs font-bold text-white truncate">Admin User</p>
+                    <p class="text-[10px] text-slate-400 truncate">Governance Ops</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+                const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+                sidebarLinks.forEach(link => {
+                    if (link.getAttribute('href') === currentPath) {
+                        link.classList.add('bg-slate-800', 'text-white');
+                        link.classList.remove('text-slate-300');
+                    } else {
+                        link.classList.remove('bg-slate-800', 'text-white');
+                        link.classList.add('text-slate-300');
+                    }
+                });
+            });
+        </script>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <!-- Top Bar -->
+        <header
+            class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 flex-shrink-0 z-10">
+            <h1 class="text-xl font-bold text-gray-900 tracking-tight">Governance Task Queue</h1>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <span
+                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 text-xs">🔍</span>
+                    <input type="text" placeholder="Filter tasks..."
+                        class="block w-64 pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all">
+                </div>
+                <button
+                    class="p-2 text-gray-400 hover:text-gray-600 border border-gray-200 rounded-lg bg-white shadow-sm">
+                    <span class="text-lg">⚙️</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 overflow-y-auto bg-gray-50 p-8">
+            <div class="max-w-6xl mx-auto space-y-6">
+
+                <!-- Stats Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Open</p>
+                        <p class="text-2xl font-black text-slate-900">42</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm border-l-4 border-l-red-500">
+                        <p class="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-1">Critical Issues</p>
+                        <p class="text-2xl font-black text-slate-900">12</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">STP Failed</p>
+                        <p class="text-2xl font-black text-slate-900">28</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Resolved (24h)</p>
+                        <p class="text-2xl font-black text-green-600">84%</p>
+                    </div>
+                </div>
+
+                <!-- Task Table -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th
+                                        class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                        Priority</th>
+                                    <th
+                                        class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                        Type / Issue</th>
+                                    <th
+                                        class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                        Entity</th>
+                                    <th
+                                        class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                        Source(s)</th>
+                                    <th
+                                        class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                        Status</th>
+                                    <th class="px-6 py-4"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+
+                                <!-- Task 1: Data Conflict -->
+                                <tr class="hover:bg-slate-50 transition-colors cursor-pointer group"
+                                    onclick="location.href='manage-task.html?id=T-1082'">
+                                    <td class="px-6 py-4">
+                                        <span class="status-badge priority-high">High</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-bold text-slate-900">Data Conflict</p>
+                                        <p class="text-xs text-gray-500">Legal Name mismatch (Registry vs GLEIF)</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-medium text-slate-600">Acme Corporation PLC</p>
+                                        <p class="text-[10px] text-gray-400">LEI: 5493001KJTIIGC8Y1R12</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex -space-x-2">
+                                            <div class="w-6 h-6 rounded bg-blue-100 border border-white flex items-center justify-center text-[8px] font-bold text-blue-600"
+                                                title="Companies House">CH</div>
+                                            <div class="w-6 h-6 rounded bg-green-100 border border-white flex items-center justify-center text-[8px] font-bold text-green-600"
+                                                title="GLEIF">GF</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="text-[10px] font-bold bg-amber-50 text-amber-700 px-2 py-0.5 rounded border border-amber-100 uppercase">Pending
+                                            Resolution</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button
+                                            class="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-bold text-gray-700 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">Manage</button>
+                                    </td>
+                                </tr>
+
+                                <!-- Task 2: STP Failure -->
+                                <tr class="hover:bg-slate-50 transition-colors cursor-pointer group"
+                                    onclick="location.href='manage-task.html?id=T-1083'">
+                                    <td class="px-6 py-4">
+                                        <span class="status-badge priority-med">Medium</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-bold text-slate-900">STP Failure</p>
+                                        <p class="text-xs text-gray-500">Address format validation error</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-medium text-slate-600">Starlight Ventures LP</p>
+                                        <p class="text-[10px] text-gray-400">LEI: 213800XWJTYK8R1234</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex -space-x-2">
+                                            <div class="w-6 h-6 rounded bg-slate-100 border border-white flex items-center justify-center text-[8px] font-bold text-slate-600"
+                                                title="SEC Edgar">SEC</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="text-[10px] font-bold bg-orange-50 text-orange-700 px-2 py-0.5 rounded border border-orange-100 uppercase">Input
+                                            Required</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button
+                                            class="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-bold text-gray-700 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">Manage</button>
+                                    </td>
+                                </tr>
+
+                                <!-- Task 3: Quality Alert -->
+                                <tr class="hover:bg-slate-50 transition-colors cursor-pointer group"
+                                    onclick="location.href='manage-task.html?id=T-1084'">
+                                    <td class="px-6 py-4">
+                                        <span class="status-badge priority-low">Low</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-bold text-slate-900">Quality Alert</p>
+                                        <p class="text-xs text-gray-500">Stale officer data (Exceeds 90 days)</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-medium text-slate-600">Global Tech S.A.</p>
+                                        <p class="text-[10px] text-gray-400">LEI: 984500123ABCDEFGHI</p>
+                                    </td>
+                                    <td class="px-6 py-4 flex -space-x-2">
+                                        <div class="w-6 h-6 rounded bg-blue-100 border border-white flex items-center justify-center text-[8px] font-bold text-blue-600"
+                                            title="OpenCorporates">OC</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100 uppercase">Monitoring</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button
+                                            class="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-bold text-gray-700 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">Manage</button>
+                                    </td>
+                                </tr>
+
+                                <!-- More placeholder rows... -->
+                                <tr class="opacity-50">
+                                    <td class="px-6 py-8"
+                                        colspan="6 text-center text-xs italic text-gray-400 font-medium">9+ additional
+                                        tasks below...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        class="px-6 py-4 bg-gray-50 flex justify-between items-center text-xs font-medium text-gray-500 border-t border-gray-100">
+                        <span>Showing 3 of 42 tasks</span>
+                        <div class="flex space-x-2">
+                            <button
+                                class="px-3 py-1 bg-white border border-gray-200 rounded hover:bg-gray-100">Prev</button>
+                            <button
+                                class="px-3 py-1 bg-white border border-gray-200 rounded hover:bg-gray-100">Next</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

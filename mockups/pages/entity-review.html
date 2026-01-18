@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Review - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white shrink-0">
+                G</div>
+            <span class="text-lg font-bold tracking-wide truncate">GRIP</span>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📊</span> <span class="truncate">Dashboard</span>
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> <span class="truncate">Entity Search</span>
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> <span class="truncate">Lineage Mapping</span>
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📋</span> <span class="truncate">Task Queue</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuration</p>
+                </div>
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">💚</span> <span class="truncate">Sources</span>
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">✅</span> <span class="truncate">DQ Rules</span>
+                </a>
+                <a href="er-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔗</span> <span class="truncate">ER Rules</span>
+                </a>
+                <a href="survivorship-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🏆</span> <span class="truncate">Survivorship</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System</p>
+                </div>
+                <a href="audit-log.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📜</span> <span class="truncate">Audit Log</span>
+                </a>
+                <a href="user-management.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">👤</span> <span class="truncate">Users</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center">
+                <div
+                    class="h-8 w-8 rounded-full bg-blue-500 border border-blue-400/30 flex items-center justify-center text-[10px] font-bold shadow-md">
+                    AU</div>
+                <div class="ml-3 truncate">
+                    <p class="text-xs font-bold text-white truncate">Admin User</p>
+                    <p class="text-[10px] text-slate-400 truncate">Governance Ops</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+                const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+                sidebarLinks.forEach(link => {
+                    if (link.getAttribute('href') === currentPath) {
+                        link.classList.add('bg-slate-800', 'text-white');
+                        link.classList.remove('text-slate-300');
+                    } else {
+                        link.classList.remove('bg-slate-800', 'text-white');
+                        link.classList.add('text-slate-300');
+                    }
+                });
+            });
+        </script>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8">
+            <div class="flex items-center">
+                <a href="entity-evidence.html" class="mr-4 text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <h1 class="text-xl font-semibold text-gray-900">Final Review</h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button
+                    class="px-3 py-1.5 text-xs font-bold text-gray-500 hover:text-gray-700 uppercase tracking-widest">Save
+                    Draft</button>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8 bg-gray-50 flex justify-center">
+
+            <div class="w-full max-w-4xl space-y-8">
+
+                <!-- Progress Stepper -->
+                <nav aria-label="Progress">
+                    <ol role="list" class="flex items-center">
+                        <li class="relative pr-8 sm:pr-20">
+                            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                                <div class="h-0.5 w-full bg-blue-600"></div>
+                            </div>
+                            <a href="#"
+                                class="relative flex h-8 w-8 items-center justify-center rounded-full bg-blue-600">
+                                <svg class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="relative pr-8 sm:pr-20">
+                            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                                <div class="h-0.5 w-full bg-blue-600"></div>
+                            </div>
+                            <a href="#"
+                                class="relative flex h-8 w-8 items-center justify-center rounded-full bg-blue-600">
+                                <svg class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="relative pr-8 sm:pr-20">
+                            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                                <div class="h-0.5 w-full bg-blue-600"></div>
+                            </div>
+                            <a href="#"
+                                class="relative flex h-8 w-8 items-center justify-center rounded-full bg-blue-600">
+                                <svg class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="relative">
+                            <a href="#"
+                                class="relative flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 ring-4 ring-blue-100 shadow-lg">
+                                <span class="h-2.5 w-2.5 rounded-full bg-white"></span>
+                            </a>
+                        </li>
+                    </ol>
+                    <div
+                        class="flex justify-between mt-2 text-[10px] font-black uppercase tracking-widest text-gray-400 pr-0">
+                        <span class="text-blue-600">1. Identify Entity</span>
+                        <span class="text-blue-600">2. Resolve & Link</span>
+                        <span class="text-blue-600">3. Evidence & Docs</span>
+                        <span class="text-blue-600">4. Final Review</span>
+                    </div>
+                </nav>
+
+                <!-- Review Content -->
+                <div class="space-y-6">
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-8 py-5 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-tight">Entity Core Profile
+                            </h3>
+                            <button class="text-blue-600 text-xs font-bold hover:underline">Edit Fields</button>
+                        </div>
+                        <div class="p-8 grid grid-cols-2 gap-x-12 gap-y-6">
+                            <div>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Legal
+                                    Name</p>
+                                <p class="text-sm font-bold text-gray-900">Acme Corporation PLC</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                    Jurisdiction</p>
+                                <p class="text-sm font-bold text-gray-900">United Kingdom (GB)</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Legal
+                                    Form</p>
+                                <p class="text-sm font-bold text-gray-900">Public Limited Company (PLC)</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Status
+                                </p>
+                                <span
+                                    class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold uppercase tracking-tight">Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-8 py-5 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-tight">Lineage & Sources</h3>
+                        </div>
+                        <div class="p-8">
+                            <div class="space-y-4">
+                                <div
+                                    class="flex items-center justify-between p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+                                    <div class="flex items-center">
+                                        <span class="text-xl mr-4">🏦</span>
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900">Companies House (GB)</p>
+                                            <p class="text-[10px] text-gray-500 uppercase tracking-widest">Primary Live
+                                                Source</p>
+                                        </div>
+                                    </div>
+                                    <span
+                                        class="text-[10px] font-bold text-blue-600 bg-white border border-blue-100 px-2 py-1 rounded">Live
+                                        Link Active</span>
+                                </div>
+
+                                <div
+                                    class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                    <div class="flex items-center">
+                                        <span class="text-xl mr-4">📄</span>
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900">Articles_of_Association.pdf</p>
+                                            <p class="text-[10px] text-gray-500 uppercase tracking-widest">Manual
+                                                Evidence</p>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-400 hover:text-blue-600">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div
+                    class="mt-12 flex justify-between items-center bg-white p-8 rounded-2xl border-2 border-blue-600 shadow-2xl shadow-blue-100">
+                    <div>
+                        <h4 class="text-lg font-bold text-gray-900">Ready to Establish?</h4>
+                        <p class="text-sm text-gray-500">Submitting will create the entity record and initiate live
+                            monitoring.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button
+                            class="px-8 py-4 bg-gray-100 text-gray-600 rounded-xl font-bold hover:bg-gray-200 transition-all">Cancel</button>
+                        <a href="entity-detail.html"
+                            class="px-10 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-xl shadow-blue-300 transition-all active:scale-95">Establish
+                            Entity Record</a>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

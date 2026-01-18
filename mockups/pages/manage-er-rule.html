@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Rule - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .code-editor {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+
+        .glass-morphic {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        @keyframes scan {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+        }
+
+        .scanning-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            box-shadow: 0 0 15px #3b82f6;
+            animation: scan 1.5s linear infinite;
+        }
+
+        .match-score-bar {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .match-score-fill {
+            height: 100%;
+            background: #3b82f6;
+            transition: width 1s ease-out;
+        }
+
+        .record-card-visual {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .record-card-visual:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+
+        .attribute-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .attribute-line:last-child {
+            border-bottom: none;
+        }
+
+        .feed-strip {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .feed-strip:hover {
+            background-color: #f8fafc;
+        }
+
+        .feed-strip.active {
+            background-color: #eff6ff;
+            border-color: #bfdbfe;
+            box-shadow: inset 4px 0 0 0 #3b82f6;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden text-slate-900">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white shrink-0">
+                G</div>
+            <span class="text-lg font-bold tracking-wide truncate">GRIP</span>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📊</span> <span class="truncate">Dashboard</span>
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> <span class="truncate">Entity Search</span>
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> <span class="truncate">Lineage Mapping</span>
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📋</span> <span class="truncate">Task Queue</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuration</p>
+                </div>
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">💚</span> <span class="truncate">Sources</span>
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">✅</span> <span class="truncate">DQ Rules</span>
+                </a>
+                <a href="er-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔗</span> <span class="truncate">ER Rules</span>
+                </a>
+                <a href="survivorship-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🏆</span> <span class="truncate">Survivorship</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center">
+                <div
+                    class="h-8 w-8 rounded-full bg-blue-500 border border-blue-400/30 flex items-center justify-center font-bold text-[10px] shadow-md">
+                    AU</div>
+                <div class="ml-3 truncate">
+                    <p class="text-xs font-bold text-white truncate">Admin User</p>
+                    <p class="text-[10px] text-slate-400 truncate">Governance Ops</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 flex-shrink-0">
+            <div class="flex items-center">
+                <nav class="flex text-xs text-slate-400 font-bold uppercase tracking-widest mr-6">
+                    <a href="er-rules.html" class="hover:text-blue-600 transition-colors">ER Configuration</a>
+                    <span class="mx-2 text-slate-300">/</span>
+                    <span id="breadcrumb-current" class="text-slate-600">Edit ER Rule</span>
+                </nav>
+                <div class="h-6 w-px bg-gray-200 mr-6"></div>
+                <h1 id="page-title" class="text-lg font-bold text-gray-900 tracking-tight">ER Logic: <span
+                        class="text-blue-600">Exact ID Match</span></h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="history.back()"
+                    class="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors">Cancel</button>
+                <button onclick="saveRule()"
+                    class="px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all">Save
+                    Changes</button>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-hidden flex bg-slate-50">
+            <!-- Left: Rule editor -->
+            <div class="flex-1 overflow-y-auto p-12 custom-scrollbar">
+                <div class="max-w-4xl mx-auto space-y-8">
+                    <!-- Section: Logic Builder -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-gray-900">Rule Logic Builder</h3>
+                                <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest font-black">Visual
+                                    Condition
+                                    Expression</p>
+                            </div>
+                            <div class="flex p-1 bg-gray-100 rounded-lg">
+                                <button
+                                    class="px-3 py-1 text-xs font-bold rounded-md bg-white shadow-sm text-blue-600">Visual</button>
+                                <button class="px-3 py-1 text-xs font-bold rounded-md text-slate-500">Code
+                                    (JSON)</button>
+                            </div>
+                        </div>
+                        <div class="p-8 space-y-4">
+                            <!-- Rule Group -->
+                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-2">
+                                        <span
+                                            class="px-2 py-1 bg-slate-200 text-slate-600 rounded text-[10px] font-black uppercase">AND</span>
+                                        <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Global
+                                            Constraints</span>
+                                    </div>
+                                    <button class="text-slate-400 hover:text-red-500">✕</button>
+                                </div>
+
+                                <!-- Condition Root -->
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-3 group">
+                                        <div
+                                            class="h-8 w-8 bg-white border border-slate-200 rounded flex items-center justify-center text-slate-400 font-bold text-xs">
+                                            1</div>
+                                        <select
+                                            class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option>Entity.LegalName</option>
+                                            <option>Entity.RegistrationID</option>
+                                            <option>PostalAddress.City</option>
+                                        </select>
+                                        <select
+                                            class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option>Equals (Exact)</option>
+                                            <option>Fuzzy Match (Score >)</option>
+                                            <option>Starts With</option>
+                                        </select>
+                                        <input type="text" value="Incoming.LegalName"
+                                            class="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-mono text-blue-600 focus:ring-2 focus:ring-blue-500 outline-none">
+                                        <button
+                                            class="p-2 text-slate-300 hover:text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">🗑️</button>
+                                    </div>
+
+                                    <div class="flex items-center space-x-3 group">
+                                        <div
+                                            class="h-8 w-8 bg-white border border-slate-200 rounded flex items-center justify-center text-slate-400 font-bold text-xs">
+                                            2</div>
+                                        <select
+                                            class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option>Entity.RegistrationID</option>
+                                            <option>Entity.LegalName</option>
+                                            <option>PostalAddress.City</option>
+                                        </select>
+                                        <select
+                                            class="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option>Equals (Exact)</option>
+                                            <option>Is Not Null</option>
+                                        </select>
+                                        <div
+                                            class="flex-1 flex items-center justify-center h-10 border border-dashed border-slate-300 rounded-lg text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                            Auto (Field Value Match)
+                                        </div>
+                                        <button
+                                            class="p-2 text-slate-300 hover:text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">🗑️</button>
+                                    </div>
+                                </div>
+
+                                <button class="text-blue-600 text-xs font-bold hover:underline py-2">+ Add
+                                    Condition</button>
+                            </div>
+
+                            <!-- Action Section -->
+                            <div class="pt-6 border-t border-gray-100">
+                                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">On Rule
+                                    Trigger</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div
+                                        class="p-4 bg-blue-50 border border-blue-100 rounded-xl relative ring-2 ring-blue-500 ring-offset-2">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span
+                                                class="text-xs font-bold text-blue-700 uppercase tracking-tighter">Auto-Merge
+                                                (Linking)</span>
+                                            <input type="radio" checked name="action" class="text-blue-600">
+                                        </div>
+                                        <p class="text-[10px] text-blue-600">Automatically creates linkage between
+                                            records in the Golden Golden.</p>
+                                    </div>
+                                    <div
+                                        class="p-4 bg-white border border-gray-100 rounded-xl hover:border-blue-200 cursor-pointer">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span
+                                                class="text-xs font-bold text-slate-700 uppercase tracking-tighter">Flag
+                                                for Manual Verification</span>
+                                            <input type="radio" name="action" class="text-slate-300">
+                                        </div>
+                                        <p class="text-[10px] text-slate-400">Creates a "Potential Duplicate" task in
+                                            the queue for manual review.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="bg-slate-900 px-8 py-5 flex justify-between items-center">
+                            <div class="flex items-center">
+                                <span class="text-blue-400 mr-2">🎯</span>
+                                <h3 class="text-white font-bold text-sm tracking-tight uppercase tracking-widest">ER
+                                    Match Simulator</h3>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <button onclick="runSimulation()"
+                                    class="px-4 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-900/50 hover:bg-blue-500 active:scale-95 transition-all">Simulate
+                                    Selected</button>
+                            </div>
+                        </div>
+                        <div class="p-8 grid grid-cols-2 gap-8">
+                            <!-- Simulator Input -->
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <label
+                                            class="block text-[10px] font-black text-slate-400 uppercase tracking-widest">1.
+                                            Incoming Feed</label>
+                                        <p
+                                            class="text-[9px] text-slate-500 font-bold uppercase tracking-tighter mt-0.5">
+                                            Bloomberg_Entity_v1.0 (5 Pending)</p>
+                                    </div>
+                                </div>
+
+                                <div id="sim-feed"
+                                    class="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                                    <!-- Populated by JS -->
+                                </div>
+
+                                <div id="selected-details" class="record-card-visual space-y-3 bg-slate-50/50">
+                                    <p
+                                        class="text-[9px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">
+                                        Active Record Details</p>
+                                    <div class="space-y-1">
+                                        <div class="attribute-line">
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Legal
+                                                Name</span>
+                                            <span id="vis-legal-name" class="text-xs font-bold text-slate-900">-</span>
+                                        </div>
+                                        <div class="attribute-line">
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">LEI</span>
+                                            <span id="vis-lei" class="text-[10px] font-mono text-slate-600">-</span>
+                                        </div>
+                                        <div class="attribute-line">
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Reg
+                                                ID</span>
+                                            <span id="vis-reg-id" class="text-[10px] font-mono text-slate-600">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 bg-amber-50 border border-amber-100 rounded-xl">
+                                    <p class="text-[10px] text-amber-700 font-bold mb-1 uppercase tracking-tight">
+                                        Existing Candidate Pool</p>
+                                    <div
+                                        class="flex items-center text-[10px] text-amber-600 bg-white px-2 py-1 rounded border border-amber-200/50 inline-block">
+                                        <span class="mr-1">📂</span> 1,240,503 Golden Records
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Simulator Output -->
+                            <div class="flex flex-col">
+                                <label
+                                    class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">2.
+                                    Match Outcome</option>
+                                    <div id="sim-result-card"
+                                        class="flex-1 flex flex-col items-center justify-center p-8 bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl transition-all">
+                                        <div class="text-center space-y-3 opacity-40" id="sim-empty-state">
+                                            <div class="text-4xl">⚡</div>
+                                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">
+                                                Ready to Simulate</p>
+                                        </div>
+
+                                        <!-- Result UI (Hidden by default) -->
+                                        <div id="sim-filled-state" class="hidden w-full space-y-6">
+                                            <!-- Scanning Overlay (Visible for 0.5s) -->
+                                            <div id="sim-scanning"
+                                                class="hidden absolute inset-0 z-20 overflow-hidden rounded-3xl pointer-events-none">
+                                                <div class="scanning-line"></div>
+                                            </div>
+
+                                            <div
+                                                class="bg-white p-6 rounded-2xl border border-blue-200 shadow-xl shadow-blue-500/5 relative overflow-hidden group">
+                                                <div
+                                                    class="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full -mr-4 -mt-4">
+                                                </div>
+                                                <div class="relative z-10 text-center">
+                                                    <span id="res-badge"
+                                                        class="px-2 py-0.5 bg-blue-600 text-white rounded text-[9px] font-black uppercase mb-3 inline-block">Auto-Merge</span>
+                                                    <p id="match-target"
+                                                        class="text-base font-bold text-gray-900 tracking-tight">"Acme
+                                                        Holdings Limited"</p>
+                                                    <p id="res-source" class="text-[10px] text-slate-500 mt-1">Found in
+                                                        GR-99821-3 (CRM Source)</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Side-by-Side Comparison -->
+                                            <div class="space-y-3" id="comparison-block">
+                                                <p
+                                                    class="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                                                    Field-Level Comparison</p>
+                                                <div
+                                                    class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                                                    <table class="w-full text-left text-[10px]">
+                                                        <thead class="bg-slate-50 border-b border-slate-100">
+                                                            <tr>
+                                                                <th
+                                                                    class="px-3 py-2 text-slate-400 font-black uppercase">
+                                                                    Field</th>
+                                                                <th
+                                                                    class="px-3 py-2 text-slate-400 font-black uppercase text-center">
+                                                                    Incoming</th>
+                                                                <th
+                                                                    class="px-3 py-2 text-slate-400 font-black uppercase text-center">
+                                                                    Target</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="sim-comparison" class="divide-y divide-slate-50">
+                                                            <!-- Comparison rows -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="space-y-3">
+                                                <p
+                                                    class="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                                                    Logic Matching Trace</p>
+                                                <div id="sim-trace"
+                                                    class="space-y-2 relative pl-4 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-slate-200">
+                                                    <!-- Steps -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Settings Sidebar -->
+            <div class="w-80 border-l border-gray-200 bg-white flex flex-col flex-shrink-0">
+                <div class="p-8 border-b border-gray-200">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 text-center">Rule
+                        Metadata</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <label
+                                class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Rule
+                                Name</label>
+                            <input type="text" id="rule-name" value="Exact Name Match"
+                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Rule
+                                Category</label>
+                            <select id="rule-category"
+                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-slate-900">
+                                <option disabled>Data Quality (DQ)</option>
+                                <option selected>Entity Resolution (ER)</option>
+                                <option disabled>Survivorship</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Severity</label>
+                            <div class="flex space-x-2">
+                                <button
+                                    class="flex-1 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700 text-[10px] font-black uppercase">High</button>
+                                <button
+                                    class="flex-1 py-2 rounded-lg border border-amber-200 bg-white text-slate-400 text-[10px] font-black uppercase">Med</button>
+                                <button
+                                    class="flex-1 py-2 rounded-lg border border-gray-100 bg-white text-slate-400 text-[10px] font-black uppercase">Low</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 flex-1 overflow-y-auto">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Version Control</h3>
+                    <div class="space-y-3">
+                        <div
+                            class="p-4 bg-blue-50 border border-blue-200 rounded-xl flex justify-between items-center group cursor-pointer ring-2 ring-blue-500">
+                            <div>
+                                <p class="text-xs font-bold text-blue-700">v1.2 (Active)</p>
+                                <p class="text-[9px] text-blue-500">Last updated today</p>
+                            </div>
+                            <span class="text-blue-500">✓</span>
+                        </div>
+                        <div
+                            class="p-4 bg-white border border-gray-100 rounded-xl flex justify-between items-center hover:border-gray-200 cursor-pointer transition-all">
+                            <div>
+                                <p class="text-xs font-bold text-slate-700">v1.3 (Unreleased)</p>
+                                <p class="text-[9px] text-slate-400 italic">No dev deployed</p>
+                            </div>
+                            <span class="text-gray-300">Next</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 border-t border-gray-100 bg-gray-50/50">
+                    <button
+                        class="w-full py-4 bg-white border border-gray-200 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 hover:border-red-200 transition-all">Archive
+                        Rule</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const mode = params.get('mode') || 'edit';
+
+            if (mode === 'new') {
+                document.getElementById('breadcrumb-current').textContent = 'Create New ER Rule';
+                document.getElementById('page-title').innerHTML = 'Rule Editor: <span class="text-blue-600">New ER Rule</span>';
+                document.getElementById('rule-name').value = '';
+                document.getElementById('rule-name').placeholder = 'e.g. Cross-Border ID Match';
+            }
+
+            renderFeed();
+        });
+
+        const feedData = [
+            {
+                id: "REF-101",
+                LegalName: "Acme Holdings PLC",
+                Identifier: { LEI: "549300UT9TCDHS6WYS28", RegistrationID: "UK778899" },
+                type: 'exact'
+            },
+            {
+                id: "REF-102",
+                LegalName: "Acmy Corp LTD",
+                Identifier: { LEI: "UNKNOWN", RegistrationID: "UK123456" },
+                type: 'fuzzy'
+            },
+            {
+                id: "REF-103",
+                LegalName: "Zylotech Solutions Inc",
+                Identifier: { LEI: "ABC-123", RegistrationID: "US-999" },
+                type: 'none'
+            },
+            {
+                id: "REF-104",
+                LegalName: "Global Venture Partners",
+                Identifier: { LEI: "777-XYZ", RegistrationID: "GV-88" },
+                type: 'none'
+            },
+            {
+                id: "REF-105",
+                LegalName: "Standard Oil & Gas",
+                Identifier: { LEI: "OIL-100", RegistrationID: "SG-200" },
+                type: 'exact'
+            }
+        ];
+
+        let selectedRecordIndex = 0;
+
+        function renderFeed() {
+            const container = document.getElementById('sim-feed');
+            container.innerHTML = '';
+
+            feedData.forEach((rec, idx) => {
+                const strip = document.createElement('div');
+                strip.className = `feed-strip p-3 border border-slate-200 rounded-xl mb-2 flex justify-between items-center ${idx === selectedRecordIndex ? 'active' : ''}`;
+                strip.onclick = () => selectRecord(idx);
+
+                strip.innerHTML = `
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center space-x-2 mb-1">
+                            <span class="text-[10px] font-black text-slate-400 uppercase truncate">ID: ${rec.id}</span>
+                            <span class="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded-[4px] text-[8px] font-bold uppercase">Ready</span>
+                        </div>
+                        <h5 class="text-xs font-bold text-slate-900 truncate">${rec.LegalName}</h5>
+                    </div>
+                    <div class="text-right ml-4">
+                        <p class="text-[9px] text-slate-400 font-mono">${rec.Identifier.LEI || 'N/A'}</p>
+                        <p class="text-[9px] text-slate-400 font-mono">${rec.Identifier.RegistrationID || 'N/A'}</p>
+                    </div>
+                `;
+                container.appendChild(strip);
+            });
+
+            updateSelectionUI();
+        }
+
+        function selectRecord(index) {
+            selectedRecordIndex = index;
+            renderFeed();
+            // Reset simulation if switching records
+            const empty = document.getElementById('sim-empty-state');
+            const filled = document.getElementById('sim-filled-state');
+            filled.classList.add('hidden');
+            empty.classList.remove('hidden');
+
+            const resultCard = document.getElementById('sim-result-card');
+            resultCard.classList.add('p-8', 'bg-slate-50', 'border-dashed');
+            resultCard.classList.remove('p-0', 'bg-white', 'border-slate-100');
+        }
+
+        function updateSelectionUI() {
+            const rec = feedData[selectedRecordIndex];
+            document.getElementById('vis-legal-name').innerText = rec.LegalName;
+            document.getElementById('vis-lei').innerText = rec.Identifier?.LEI || 'N/A';
+            document.getElementById('vis-reg-id').innerText = rec.Identifier?.RegistrationID || 'N/A';
+        }
+
+        const scenarios = {
+            exact: {
+                outcome: "Auto-Merge",
+                target: "Acme Holdings Limited",
+                source: "Found in GR-99821-3 (CRM Source)",
+                comparison: [
+                    { field: "LEI", incoming: "549300UT9TCDHS6WYS28", target: "549300UT9TCDHS6WYS28", match: true },
+                    { field: "Reg ID", incoming: "UK778899", target: "UK778899", match: true },
+                    { field: "Legal Name", incoming: "Acme Holdings PLC", target: "Acme Holdings Ltd", match: "fuzzy", score: 94 }
+                ],
+                steps: [
+                    { text: "Blocking Strategy: Filtered 1.2M -> 14 candidates (Jurisdiction match)", done: true },
+                    { text: "Identifier Check: LEI '549300UT9TCDHS6WYS28' matches GR-99821-3", done: true },
+                    { text: "Validation: Deterministic match found. Confidence 1.0", winner: true }
+                ]
+            },
+            fuzzy: {
+                outcome: "Review Required",
+                target: "Acme Corporation",
+                source: "Potential Match GR-88221 (GLEIF)",
+                comparison: [
+                    { field: "Legal Name", incoming: "Acmy Corp LTD", target: "Acme Corp Ltd", match: "fuzzy", score: 88 },
+                    { field: "Reg ID", incoming: "UK123456", target: "UK-123456", match: "fuzzy", score: 91 }
+                ],
+                steps: [
+                    { text: "Blocking Strategy: Filtered 1.2M -> 120 candidates (Phonetic)", done: true },
+                    { text: "Similarity: Name Levenstein score 0.88", done: true },
+                    { text: "Outcome: Threshold 0.85 reached. Manual validation required.", winner: true }
+                ]
+            },
+            none: {
+                outcome: "No Match",
+                target: "New Entity Creation",
+                source: "No duplicate candidates detected",
+                comparison: [
+                    { field: "Legal Name", incoming: "-", target: "N/A", match: false },
+                    { field: "LEI", incoming: "-", target: "N/A", match: false }
+                ],
+                steps: [
+                    { text: "Blocking Strategy: Identfied 0 candidates", done: true },
+                    { text: "Cross-Check: Identifiers not found in global index", done: true },
+                    { text: "Outcome: New record established as unique source.", winner: true }
+                ]
+            }
+        };
+
+        function runSimulation() {
+            const empty = document.getElementById('sim-empty-state');
+            const filled = document.getElementById('sim-filled-state');
+            const resultCard = document.getElementById('sim-result-card');
+            const trace = document.getElementById('sim-trace');
+            const scanning = document.getElementById('sim-scanning');
+            const compTable = document.getElementById('sim-comparison');
+
+            const rec = feedData[selectedRecordIndex];
+            const current = scenarios[rec.type];
+
+            // Reset and show scanning
+            empty.classList.add('hidden');
+            filled.classList.add('hidden');
+            scanning.classList.remove('hidden');
+
+            setTimeout(() => {
+                scanning.classList.add('hidden');
+                filled.classList.remove('hidden');
+                resultCard.classList.remove('p-8', 'bg-slate-50', 'border-dashed');
+                resultCard.classList.add('p-0', 'bg-white', 'border-slate-100');
+
+                // Update Outcome Card
+                const badge = document.getElementById('res-badge');
+                badge.innerText = current.outcome;
+                badge.className = `px-2 py-0.5 rounded text-[9px] font-black uppercase mb-3 inline-block ${current.outcome === 'Auto-Merge' ? 'bg-blue-600' :
+                    current.outcome === 'Review Required' ? 'bg-amber-500' : 'bg-slate-400'
+                    } text-white`;
+
+                document.getElementById('match-target').innerText = `"${current.target}"`;
+                document.getElementById('res-source').innerText = current.source;
+
+                // Update Comparison
+                compTable.innerHTML = '';
+                current.comparison.forEach(c => {
+                    const row = document.createElement('tr');
+                    let colorClass = 'text-slate-600';
+                    if (c.match === true) colorClass = 'text-emerald-600 font-bold';
+                    else if (c.match === 'fuzzy') colorClass = 'text-blue-600 font-bold';
+                    else if (c.match === false) colorClass = 'text-red-500';
+
+                    row.innerHTML = `
+                        <td class="px-3 py-2 font-black text-[8px] text-slate-400 uppercase">${c.field}</td>
+                        <td class="px-3 py-2 text-center text-slate-900">${c.incoming === '-' ? rec.LegalName : c.incoming}</td>
+                        <td class="px-3 py-2 text-center ${colorClass}">${c.target} ${c.score ? `<span class="block text-[8px] opacity-60">Score: ${c.score}%</span>` : ''}</td>
+                    `;
+                    compTable.appendChild(row);
+                });
+
+                // Update Trace
+                trace.innerHTML = '';
+                current.steps.forEach((step, idx) => {
+                    const div = document.createElement('div');
+                    div.className = "relative flex items-center";
+                    div.innerHTML = `
+                        <div class="absolute -left-[20px] w-2 h-2 rounded-full border-2 border-white ${step.winner ? 'bg-blue-600 shadow-sm' : 'bg-slate-300'}"></div>
+                        <p class="text-[10px] ${step.winner ? 'text-blue-700 font-bold' : 'text-slate-500 font-medium'}">${step.text}</p>
+                    `;
+                    trace.appendChild(div);
+                });
+            }, 600);
+        }
+
+        function saveRule() {
+            alert('Rule configuration saved and queued for deployment.');
+            location.href = 'er-rules.html';
+        }
+    </script>
+</body>
+
+</html>

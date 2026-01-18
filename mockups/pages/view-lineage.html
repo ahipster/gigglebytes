@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Lineage - Legal Name - GRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .lineage-node {
+            position: relative;
+        }
+
+        .lineage-node::after {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+
+        .lineage-node:last-child::after {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white shrink-0">
+                G</div>
+            <span class="text-lg font-bold tracking-wide">GRIP</span>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📊</span> Dashboard
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> Entity Search
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium bg-slate-800 text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> Lineage Mapping
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📋</span> Task Queue
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuration</p>
+                </div>
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">💚</span> Sources
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">✅</span> DQ Rules
+                </a>
+                <a href="er-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔗</span> ER Rules
+                </a>
+                <a href="survivorship-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🏆</span> Survivorship
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System</p>
+                </div>
+                <a href="audit-log.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📜</span> Audit Log
+                </a>
+                <a href="user-management.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">👤</span> Users
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800 font-sans">
+            <div class="flex items-center">
+                <div
+                    class="h-8 w-8 rounded-full bg-blue-500 border border-blue-400/30 flex items-center justify-center font-bold text-[10px] shadow-md">
+                    AU</div>
+                <div class="ml-3 truncate">
+                    <p class="text-xs font-bold text-white truncate">Admin User</p>
+                    <p class="text-[10px] text-slate-400 truncate">Governance Ops</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+                const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+                sidebarLinks.forEach(link => {
+                    if (link.getAttribute('href') === currentPath) {
+                        link.classList.add('bg-slate-800', 'text-white');
+                        link.classList.remove('text-slate-300');
+                    } else {
+                        link.classList.remove('bg-slate-800', 'text-white');
+                        link.classList.add('text-slate-300');
+                    }
+                });
+            });
+        </script>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <!-- Top Bar -->
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 flex-shrink-0">
+            <div class="flex items-center">
+                <a href="entity-detail.html" class="mr-4 text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <h1 class="text-xl font-bold text-gray-900 tracking-tight">Data Lineage Explorer</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">
+                    <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest mr-2">Target
+                        Entity:</span>
+                    <span class="text-xs font-bold text-slate-900">ACME CORPORATION PLC</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Left: Attribute Inventory -->
+            <aside class="w-80 border-r border-gray-200 bg-white flex flex-col flex-shrink-0">
+                <div class="p-6 border-b border-gray-100 bg-gray-50/50">
+                    <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Attribute Inventory</h3>
+                    <p class="text-xs text-gray-500 mt-1">Select a field to trace its provenance.</p>
+                </div>
+                <div class="flex-1 overflow-y-auto">
+                    <nav class="p-4 space-y-2">
+                        <!-- Attribute Item: Legal Name -->
+                        <button onclick="selectField('legal-name')" id="btn-legal-name"
+                            class="w-full text-left p-4 rounded-xl border-2 border-blue-500 bg-blue-50/50 shadow-sm transition-all group active-field">
+                            <div class="flex justify-between items-start mb-1">
+                                <span class="text-[9px] font-black text-blue-600 uppercase tracking-widest">Legal
+                                    Name</span>
+                                <span
+                                    class="text-[10px] font-bold text-blue-600 bg-white px-1.5 rounded border border-blue-100">M</span>
+                            </div>
+                            <p class="text-sm font-bold text-slate-900 truncate">Acme Corporation PLC</p>
+                            <p class="text-[10px] text-slate-400 mt-2 truncate">Manual Override via PDF 📄</p>
+                        </button>
+
+                        <!-- Attribute Item: Jurisdiction -->
+                        <button onclick="selectField('jurisdiction')" id="btn-jurisdiction"
+                            class="w-full text-left p-4 rounded-xl border-2 border-transparent hover:bg-gray-50 transition-all group">
+                            <div class="flex justify-between items-start mb-1">
+                                <span
+                                    class="text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-slate-600">Jurisdiction</span>
+                                <span
+                                    class="text-[10px] font-bold text-slate-400 bg-gray-100 px-1.5 rounded border border-gray-200 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:border-blue-100">R</span>
+                            </div>
+                            <p class="text-sm font-bold text-slate-700 truncate group-hover:text-slate-900">United
+                                Kingdom</p>
+                            <p class="text-[10px] text-slate-400 mt-2 truncate">Source: Companies House 🏦</p>
+                        </button>
+
+                        <!-- Attribute Item: LEI -->
+                        <button onclick="selectField('lei')" id="btn-lei"
+                            class="w-full text-left p-4 rounded-xl border-2 border-transparent hover:bg-gray-50 transition-all group">
+                            <div class="flex justify-between items-start mb-1">
+                                <span
+                                    class="text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-slate-600">Global
+                                    LEI</span>
+                                <span
+                                    class="text-[10px] font-bold text-slate-400 bg-gray-100 px-1.5 rounded border border-gray-200 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:border-blue-100">R</span>
+                            </div>
+                            <p class="text-sm font-mono font-bold text-slate-700 truncate group-hover:text-slate-900">
+                                5493001KJTIIGC8Y1R12</p>
+                            <p class="text-[10px] text-slate-400 mt-2 truncate">Source: GLEIF Master 🌍</p>
+                        </button>
+
+                        <!-- Attribute Item: Status -->
+                        <button onclick="selectField('status')" id="btn-status"
+                            class="w-full text-left p-4 rounded-xl border-2 border-transparent hover:bg-gray-50 transition-all group">
+                            <div class="flex justify-between items-start mb-1">
+                                <span
+                                    class="text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-slate-600">Status</span>
+                                <span
+                                    class="text-[10px] font-bold text-slate-400 bg-gray-100 px-1.5 rounded border border-gray-200 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:border-blue-100">S</span>
+                            </div>
+                            <p class="text-sm font-bold text-emerald-600 truncate">Active</p>
+                            <p class="text-[10px] text-slate-400 mt-2 truncate">Synthetic Synthesis: Verified 🟢</p>
+                        </button>
+
+                        <!-- Attribute Item: Registered Address -->
+                        <button onclick="selectField('address')" id="btn-address"
+                            class="w-full text-left p-4 rounded-xl border-2 border-transparent hover:bg-gray-50 transition-all group">
+                            <div class="flex justify-between items-start mb-1">
+                                <span
+                                    class="text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-slate-600">Registered
+                                    Address</span>
+                                <span
+                                    class="text-[10px] font-bold text-slate-400 bg-gray-100 px-1.5 rounded border border-gray-200 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:border-blue-100">R</span>
+                            </div>
+                            <p class="text-sm font-bold text-slate-700 truncate group-hover:text-slate-900">100
+                                Cheapside, London</p>
+                            <p class="text-[10px] text-slate-400 mt-2 truncate">Source: Companies House 🏦</p>
+                        </button>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Right: Lineage Detail Pane -->
+            <main class="flex-1 overflow-y-auto p-12 bg-slate-50/50">
+                <div class="max-w-4xl mx-auto" id="lineage-content">
+                    <!-- Default: Legal Name Content -->
+                    <div id="field-legal-name" class="field-pane">
+                        <div class="flex items-center justify-between mb-8">
+                            <div>
+                                <h2 class="text-3xl font-black text-slate-900 tracking-tight">Lineage: <span
+                                        class="text-blue-600">Legal Name</span></h2>
+                                <p class="text-sm text-slate-500 mt-2">Comprehensive trace of how the current Legal Name
+                                    was established.</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-3xl font-black text-green-600">98%</div>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Confidence
+                                    Score</p>
+                            </div>
+                        </div>
+
+                        <!-- Active State -->
+                        <div
+                            class="bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-8 mb-12 relative overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 px-4 py-1 bg-blue-500 text-white text-[10px] font-bold uppercase tracking-widest">
+                                Active System Value</div>
+                            <h3 class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">Master Record
+                                Value</h3>
+                            <p class="text-4xl font-black text-slate-900 tracking-tighter">Acme Corporation PLC</p>
+
+                            <div class="mt-6 flex items-center space-x-6">
+                                <div class="px-4 py-2 bg-blue-50 rounded-lg border border-blue-100">
+                                    <p class="text-[9px] font-bold text-blue-400 uppercase tracking-widest mb-1">Primary
+                                        Source</p>
+                                    <div class="flex items-center">
+                                        <span class="text-sm font-bold text-blue-700">Manual Override</span>
+                                        <span
+                                            class="ml-2 px-1.5 py-0.5 bg-blue-600 text-white rounded text-[8px] font-black uppercase">Ingested</span>
+                                    </div>
+                                </div>
+                                <div class="px-4 py-2 bg-slate-50 rounded-lg border border-slate-100">
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">
+                                        Normalization</p>
+                                    <p class="text-sm font-mono text-slate-600 italic">TitleCase()</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Flow Nodes -->
+                        <div class="space-y-8 relative pl-6">
+                            <!-- Node 1 -->
+                            <div class="lineage-node flex items-start group">
+                                <div
+                                    class="w-12 h-12 rounded-full bg-blue-600 border-4 border-white shadow-xl flex items-center justify-center text-white z-10 shrink-0">
+                                    <span class="text-sm font-bold text-xl">M</span>
+                                </div>
+                                <div class="ml-8 flex-1">
+                                    <div
+                                        class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 group-hover:border-blue-400 transition-all cursor-pointer">
+                                        <div class="flex justify-between items-start mb-4">
+                                            <div>
+                                                <h4 class="font-bold text-lg text-slate-900">Manual Override via PDF
+                                                </h4>
+                                                <p class="text-xs text-slate-500">Jan 12, 2026 • by admin_user</p>
+                                            </div>
+                                            <span
+                                                class="px-2 py-1 bg-amber-100 text-amber-700 rounded text-[10px] font-bold uppercase ring-1 ring-amber-200">Priority
+                                                Overrode Registry</span>
+                                        </div>
+                                        <div
+                                            class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div
+                                                    class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600 font-bold text-xs mr-4">
+                                                    PDF</div>
+                                                <div>
+                                                    <p class="text-sm font-bold text-slate-900">
+                                                        Acme_Articles_of_Inc_2025.pdf</p>
+                                                    <p class="text-[10px] text-slate-500">Page 1, Para 2: "Acme
+                                                        Corporation PLC"</p>
+                                                </div>
+                                            </div>
+                                            <button onclick="openSourcePreview()"
+                                                class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-blue-600 hover:bg-blue-50 transition-all shadow-sm">VIEW
+                                                SOURCE</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Node 2 -->
+                            <div class="lineage-node flex items-start group opacity-60">
+                                <div
+                                    class="w-12 h-12 rounded-full bg-slate-200 border-4 border-white shadow-md flex items-center justify-center text-slate-600 z-10 shrink-0">
+                                    <span class="text-sm font-bold text-xl">R</span>
+                                </div>
+                                <div class="ml-8 flex-1">
+                                    <div class="bg-white p-6 rounded-2xl border border-slate-100">
+                                        <h4 class="font-bold text-slate-900">Companies House Master Record</h4>
+                                        <p class="text-xs text-slate-500">Refresh: Dec 20, 2025</p>
+                                        <div
+                                            class="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between">
+                                            <div>
+                                                <p
+                                                    class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                                    Registry Value</p>
+                                                <p class="text-sm font-bold text-slate-500 line-through">ACME CORP PLC
+                                                </p>
+                                            </div>
+                                            <div class="text-right">
+                                                <p
+                                                    class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                                    Status</p>
+                                                <p class="text-sm font-bold text-amber-600 italic">Discrepancy</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Switching Logic -->
+    <script>
+        function selectField(fieldId) {
+            // Remove active class from all buttons
+            document.querySelectorAll('aside button').forEach(btn => {
+                btn.classList.remove('border-blue-500', 'bg-blue-50/50', 'active-field');
+                btn.classList.add('border-transparent');
+
+                // Reset labels
+                const labels = btn.querySelectorAll('span');
+                labels[0].classList.remove('text-blue-600');
+                labels[0].classList.add('text-gray-400');
+                labels[1].classList.remove('text-blue-600', 'bg-white', 'border-blue-100');
+                labels[1].classList.add('text-slate-400', 'bg-gray-100', 'border-gray-200');
+            });
+
+            // Add active class to selected button
+            const activeBtn = document.getElementById('btn-' + fieldId);
+            activeBtn.classList.add('border-blue-500', 'bg-blue-50/50', 'active-field');
+            activeBtn.classList.remove('border-transparent');
+
+            const activeLabels = activeBtn.querySelectorAll('span');
+            activeLabels[0].classList.add('text-blue-600');
+            activeLabels[0].classList.remove('text-gray-400');
+            activeLabels[1].classList.add('text-blue-600', 'bg-white', 'border-blue-100');
+            activeLabels[1].classList.remove('text-slate-400', 'bg-gray-100', 'border-gray-200');
+
+            // Mock content change
+            const content = document.getElementById('lineage-content');
+
+            let fieldName = "Legal Name";
+            let masterValue = "Acme Corporation PLC";
+            let confidence = "98%";
+            let source = "Manual Override";
+
+            if (fieldId === 'jurisdiction') {
+                fieldName = "Jurisdiction";
+                masterValue = "United Kingdom";
+                confidence = "100%";
+                source = "Companies House (Master)";
+            } else if (fieldId === 'lei') {
+                fieldName = "Global LEI";
+                masterValue = "5493001KJTIIGC8Y1R12";
+                confidence = "100%";
+                source = "GLEIF (Master)";
+            } else if (fieldId === 'status') {
+                fieldName = "Status";
+                masterValue = "Active";
+                confidence = "95%";
+                source = "Synthetic Synthesis";
+            } else if (fieldId === 'address') {
+                fieldName = "Registered Address";
+                masterValue = "100 Cheapside, London, EC2V 6DT";
+                confidence = "92%";
+                source = "Companies House";
+            }
+
+            content.innerHTML = `
+                <div class="field-pane animate-in fade-in duration-500">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h2 class="text-3xl font-black text-slate-900 tracking-tight">Lineage: <span class="text-blue-600">${fieldName}</span></h2>
+                            <p class="text-sm text-slate-500 mt-2">Comprehensive trace of how the current ${fieldName} was established.</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-black text-green-600">${confidence}</div>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Confidence Score</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-8 mb-12 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 px-4 py-1 bg-blue-500 text-white text-[10px] font-bold uppercase tracking-widest">Active System Value</div>
+                        <h3 class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">Master Record Value</h3>
+                        <p class="text-4xl font-black text-slate-900 tracking-tighter">${masterValue}</p>
+                        
+                        <div class="mt-6 flex items-center space-x-6">
+                            <div class="px-4 py-2 bg-blue-50 rounded-lg border border-blue-100">
+                                <p class="text-[9px] font-bold text-blue-400 uppercase tracking-widest mb-1">Primary Source</p>
+                                <div class="flex items-center">
+                                    <span class="text-sm font-bold text-blue-700">${source}</span>
+                                    <span class="ml-2 px-1.5 py-0.5 bg-blue-600 text-white rounded text-[8px] font-black uppercase">Ingested</span>
+                                </div>
+                            </div>
+                            <div class="px-4 py-2 bg-slate-50 rounded-lg border border-slate-100">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Rules Applied</p>
+                                <p class="text-sm font-mono text-slate-600 italic">Precedence(Hierarchy)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8 relative pl-6">
+                        <div class="lineage-node flex items-start group">
+                            <div class="w-12 h-12 rounded-full bg-blue-600 border-4 border-white shadow-xl flex items-center justify-center text-white z-10 shrink-0">
+                                <span class="text-sm font-bold text-xl">${source.charAt(0)}</span>
+                            </div>
+                            <div class="ml-8 flex-1">
+                                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 group-hover:border-blue-400 transition-all cursor-pointer">
+                                    <h4 class="font-bold text-lg text-slate-900">${source} Integration</h4>
+                                    <p class="text-xs text-slate-500">Dec 20, 2025 • Automatic Refresh</p>
+                                    <div class="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                                        <div>
+                                            <p class="text-sm font-bold text-slate-900">${masterValue}</p>
+                                            <p class="text-[10px] text-slate-500">Verified against official registry record.</p>
+                                        </div>
+                                        <button class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-blue-600 hover:bg-blue-50 transition-all shadow-sm">VIEW JSON</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize from URL
+        window.addEventListener('load', () => {
+            const params = new URLSearchParams(window.location.search);
+            const field = params.get('field');
+            if (field) {
+                selectField(field);
+            }
+        });
+
+        function openSourcePreview() {
+            const modal = document.getElementById('source-preview-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeSourcePreview() {
+            const modal = document.getElementById('source-preview-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+    </script>
+
+    <!-- Source Document Preview Modal -->
+    <div id="source-preview-modal"
+        class="fixed inset-0 bg-slate-900/90 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="w-full max-w-5xl h-[85vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            <header class="h-14 border-b border-gray-100 flex items-center justify-between px-6 bg-gray-50">
+                <div class="flex items-center">
+                    <span class="text-lg mr-2">📄</span>
+                    <h3 class="font-bold text-gray-900 text-sm">Evidence Source: Acme_Articles_of_Inc_2025.pdf</h3>
+                </div>
+                <button onclick="closeSourcePreview()"
+                    class="h-7 w-7 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-700 transition-all text-xs">✕</button>
+            </header>
+            <div class="flex-1 bg-slate-800 p-6 overflow-y-auto">
+                <div class="max-w-2xl mx-auto bg-white shadow-xl p-16 min-h-screen relative">
+                    <!-- Highlight Overlay (Mocked) -->
+                    <div
+                        class="absolute top-[180px] left-[60px] right-[60px] h-8 bg-blue-100/50 border border-blue-200 rounded animate-pulse pointer-events-none">
+                    </div>
+
+                    <div class="font-serif leading-relaxed text-gray-800 text-xs space-y-8">
+                        <div class="text-center mb-10">
+                            <h1 class="text-lg font-bold uppercase tracking-tight">Articles of Association</h1>
+                            <p class="text-[9px] text-gray-400 mt-1">Incorporated in England and Wales</p>
+                        </div>
+
+                        <section>
+                            <h2 class="font-bold mb-2">1. NAME AND OBJECTS</h2>
+                            <p>1.1 The name of the company is <span class="bg-yellow-100 px-0.5 font-bold">Acme
+                                    Corporation PLC</span>.</p>
+                            <p>1.2 The objects of the company are to carry on business as a general commercial company
+                                and to do all such things as are incidental or conducive to the attainment of that
+                                object.</p>
+                        </section>
+
+                        <section>
+                            <h2 class="font-bold mb-2">2. REGISTERED OFFICE</h2>
+                            <p>2.1 The registered office of the company is to be situated at 100 Cheapside, London, EC2V
+                                6DT, United Kingdom.</p>
+                        </section>
+
+                        <div class="h-20 flex items-end justify-center text-[8px] text-gray-300 italic">Page 1 of 12
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
