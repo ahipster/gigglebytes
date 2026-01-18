@@ -1,0 +1,118 @@
+# Task: Golden Record UI Refinement (Luxury Level)
+
+- [/] Planning & UI Design
+    - [x] Analyze current component
+    - [/] Update task.md & implementation_plan.md
+- [x] Refine Golden Record Visuals
+    - [x] Implement Glassmorphism/Frosting for the Golden Result
+    - [x] Add "Glowing" state for the winning source
+    - [x] Enhance "Confidence Score" visualization (Radial Gauge)
+- [x] Implement Advanced Animations
+    - [x] Add "Fly-in" animation for winning value
+    - [x] Add "Sonar" pulse for analysis progress
+    - [x] Add "Lineage Sparkle" trail from source to golden slot
+- [x] Logic Visualization (Scoring Card)
+    - [x] Create a detailed breakdown of source heuristics
+    - [x] Add "Metadata Badges" (Audit Ready, Master Data)
+- [x] Refine Audit Log UI
+    - [x] Implement Table Search functionality
+    - [x] Add granular filters (User, Action, Date Range)
+    - [x] Add "Clear Filters" state and empty results UI
+- [x] Redesign Entity Edit UI (ER-Centric)
+    - [x] Implement "Current Golden Record" header
+    - [x] Integrate 3-step stepper (Resolution, Manual Edits, Final Review)
+    - [x] Remove "Identity" step and move entity context to "Resolution" header
+    - [x] Refactor Resolution section to a **Vertical Stacked Table layout**
+    - [x] Finalize "Manual Changes" screen
+    - [x] Refine "Final Review" screen
+        - [x] Add explicit table for manual overrides
+        - [x] Add source record maintenance table (incl. unlinked records)
+        - [x] Update button labels (Discard/Publish)
+        - [x] Add expandable entity overview preview (Overview data)
+- [x] Refine Entity Establishment UI
+    - [x] Rename "Registry Matches" to "Search Results" in `entity-establish.html`
+    - [x] Adopt `entity-search.html` table style for search results (Mixed Golden/Registry)
+    - [x] **Align Resolution Section** with the new vertical table layout in `edit-entity.html`
+- [x] Refine Task Management UI (`manage-task.html`)
+    - [x] Add "Same Entity" verification card
+        - [x] Represent target entity and identifiers
+        - [x] Visualize 3+ other potential golden records
+        - [x] Implement expandable side-by-side compare view
+        - [x] Highlight matching and conflicting attributes
+        - [x] Add merge action buttons
+    - [x] Add "Registry Records" management card
+        - [x] Table of linked records/registries
+        - [x] Actions to unlink or disable
+    - [x] Refine "Field-Level Conflict Resolution" card
+        - [x] Add Manual Edit Verification scenario
+        - [x] Add Risky Cross-Source Matching scenario
+        - [x] Update messaging and descriptions
+- [x] Populate ER Rule Examples
+    - [x] Research and design new auto-merge scenarios
+    - [x] Update `er-rules.html` with more examples
+    - [x] Verify UI consistency and styling
+- [x] Populate DQ Rule Examples & Add New Rule Mockup
+    - [x] Research and design new DQ rule scenarios (Date range, Jurisdiction, etc.)
+    - [x] Update `dq-rules.html` with more examples
+    - [x] Create `create-dq-rule-template.html` as an "Add New Rule" template gallery
+    - [x] Update `dq-rules.html` and `er-rules.html` to point to the new template gallery
+    - [x] Verify UI consistency and styling
+- [x] Final Task UI Refinements
+    - [x] Add evidence link to "Current Manual Override" in `manage-task.html`
+- [x] Split Rule Management & Add ER Simulator
+    - [x] Create `manage-dq-rule.html` for DQ-specific logic
+    - [x] Create `manage-er-rule.html` with Match Simulator
+    - [x] Implement ER Match Simulator logic/UI (Record input -> Match Result)
+    - [x] Update `dq-rules.html` and `er-rules.html` to point to new pages
+    - [x] Update `create-dq-rule-template.html` to handle separate routes
+    - [x] Verify navigation and simulator interactivity
+- [x] Refine ER Match Simulator
+    - [x] Add simulation scenario presets (Match, Review, No Match)
+    - [x] Implement side-by-side field comparison in simulator output
+    - [x] Visualize fuzzy match score weighting
+    - [x] Enhance simulator layout with advanced animations/glassmorphism
+    - [x] Verify interactivity and documentation
+- [x] Refine ER Match Simulator UI (Visual Cards)
+    - [x] Replace JSON textarea with visual Record Card
+    - [x] Implement toggle for Raw JSON view
+    - [x] Update loadScenario to refresh visual cards
+    - [x] Verify visual interactivity
+- [x] Refine ER Match Simulator (Incoming Feed)
+    - [x] Transform single record card into a multi-record feed
+    - [x] Implement record selection logic for simulation
+    - [x] Add feed-level metadata (total records, active source)
+    - [x] Update simulation output to reference the selected record
+    - [x] Verify interactivity and persistence
+- [x] Simplify ER Match Simulator (Remove JSON)
+    - [x] Remove "View Raw JSON" toggle button
+    - [x] Remove hidden JSON textarea
+    - [x] Clean up JS toggle logic
+    - [x] Verify simplified UI
+- [x] Align Entity Establishment Resolution View
+    - [x] Create implementation plan
+    - [x] Update entity-establish.html styles
+    - [x] Replace Step 1 content with comparison cards
+    - [x] Add comparison JS logic
+    - [x] Verify view parity and interactivity
+- [x] Align Edit Entity Resolution View
+    - [x] Create implementation plan
+    - [x] Update edit-entity.html styles
+    - [x] Replace Step 1 content with comparison cards
+    - [x] Add comparison JS logic
+    - [x] Verify view parity and interactivity
+- [x] Add Search Step to Entity Establishment
+    - [x] Create implementation plan
+    - [x] Update entity-establish.html stepper (4 steps)
+    - [x] Implement Search view (Step 1)
+    - [x] Shift Resolution, Manual Edits, Review to Steps 2, 3, 4
+    - [x] Add selection logic and "records identified" note
+    - [x] Verify flow and transitions
+- [x] Refine Manual Edits with Document Grounding
+    - [x] Create implementation plan
+    - [x] Update entity-establish.html Step 3 with Doc components
+    - [x] Update edit-entity.html Step 2 with Doc components
+    - [x] Add full attribute list to both sidebars
+    - [x] Integrate interactive PDF viewer and grounding logic
+    - [x] Verify interactivity andTransitions
+    - [x] Verify consistent Resolution UI across Edit and Establish
+    - [x] Update and capture final walkthrough demo

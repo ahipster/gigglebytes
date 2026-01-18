@@ -16,60 +16,90 @@
 
 <body class="bg-gray-50 flex h-screen overflow-hidden">
 
-    <!-- Sidebar (Identical to Dashboard) -->
-    <aside class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
         <div class="h-16 flex items-center px-6 border-b border-slate-800">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white">G
-            </div>
-            <span class="text-lg font-bold tracking-wide">GRIP</span>
+            <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white shrink-0">
+                G</div>
+            <span class="text-lg font-bold tracking-wide truncate">GRIP</span>
         </div>
-
         <div class="p-4 flex-1 overflow-y-auto">
             <nav class="space-y-1">
                 <a href="dashboard.html"
-                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
-                    <span class="mr-3 text-xl">📊</span> Dashboard
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📊</span> <span class="truncate">Dashboard</span>
                 </a>
                 <a href="entity-search.html"
-                    class="flex items-center px-3 py-2 text-sm font-medium bg-slate-800 text-white rounded-lg group transition-colors">
-                    <span class="mr-3 text-xl">🔍</span> Entity Search
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> <span class="truncate">Entity Search</span>
                 </a>
                 <a href="lineage-overview.html"
-                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
-                    <span class="mr-3 text-xl">🌲</span> Lineage Mapping
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> <span class="truncate">Lineage Mapping</span>
                 </a>
                 <a href="task-queue.html"
-                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
-                    <span class="mr-3 text-xl">📋</span> Task Queue
-                    <span
-                        class="ml-auto bg-blue-600 text-white py-0.5 px-2 rounded-full text-[10px] font-bold">12</span>
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📋</span> <span class="truncate">Task Queue</span>
                 </a>
-
                 <div class="pt-4 pb-2">
-                    <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider font-bold">
-                        Configuration</p>
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuration</p>
                 </div>
-
                 <a href="source-detail.html"
-                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
-                    <span class="mr-3 text-xl">💚</span> Sources
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">💚</span> <span class="truncate">Sources</span>
                 </a>
                 <a href="dq-rules.html"
-                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg group transition-colors">
-                    <span class="mr-3 text-xl">✅</span> DQ Rules
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">✅</span> <span class="truncate">DQ Rules</span>
+                </a>
+                <a href="er-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔗</span> <span class="truncate">ER Rules</span>
+                </a>
+                <a href="survivorship-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🏆</span> <span class="truncate">Survivorship</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System</p>
+                </div>
+                <a href="audit-log.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📜</span> <span class="truncate">Audit Log</span>
+                </a>
+                <a href="user-management.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">👤</span> <span class="truncate">Users</span>
                 </a>
             </nav>
         </div>
-        <div class="p-4 border-t border-slate-800">
+        <div class="p-4 border-t border-slate-800 font-sans">
             <div class="flex items-center">
                 <div
-                    class="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold">
+                    class="h-8 w-8 rounded-full bg-blue-500 border border-blue-400/30 flex items-center justify-center font-bold text-[10px] shadow-md">
                     AU</div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-white">Admin User</p>
+                <div class="ml-3 truncate">
+                    <p class="text-xs font-bold text-white truncate">Admin User</p>
+                    <p class="text-[10px] text-slate-400 truncate">Governance Ops</p>
                 </div>
             </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+                const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+                sidebarLinks.forEach(link => {
+                    if (link.getAttribute('href') === currentPath) {
+                        link.classList.add('bg-slate-800', 'text-white');
+                        link.classList.remove('text-slate-300');
+                    } else {
+                        link.classList.remove('bg-slate-800', 'text-white');
+                        link.classList.add('text-slate-300');
+                    }
+                });
+            });
+        </script>
     </aside>
 
     <!-- Main Content -->
@@ -102,21 +132,21 @@
                         <!-- Autocomplete Dropdown Mockup (Initially Hidden) -->
                         <div id="search-autocomplete-dropdown"
                             class="absolute z-10 left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 divide-y divide-gray-100 hidden">
-                            <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                            <a href="entity-detail.html" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
                                 <div class="flex justify-between">
                                     <span class="font-medium text-gray-900">Acme Corporation</span>
                                     <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Active</span>
                                 </div>
                                 <div class="text-xs text-gray-500 mt-0.5">US-DE • 5493001KJTIIGC8Y1R12</div>
                             </a>
-                            <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                            <a href="entity-detail.html" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
                                 <div class="flex justify-between">
                                     <span class="font-medium text-gray-900">Acme Holdings Ltd</span>
                                     <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Active</span>
                                 </div>
                                 <div class="text-xs text-gray-500 mt-0.5">GB • 01234567</div>
                             </a>
-                            <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                            <a href="entity-detail.html" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
                                 <div class="flex justify-between">
                                     <span class="font-medium text-gray-900">Acme International GmbH</span>
                                     <span class="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">Dissolved</span>
@@ -176,8 +206,9 @@
                 <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                     <h3 class="font-medium text-gray-700">Displaying 3 results</h3>
                     <div class="flex space-x-2">
-                        <button class="p-1 hover:bg-gray-200 rounded"><span class="text-gray-500">⬇️
-                                Export</span></button>
+                        <a href="snapshot-export.html" class="p-1 hover:bg-gray-200 rounded flex items-center">
+                            <span class="text-gray-500 text-sm">⬇️ Export Results</span>
+                        </a>
                     </div>
                 </div>
 
@@ -355,10 +386,10 @@
                 <!-- Pagination Footer -->
                 <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
                     <div class="flex-1 flex justify-between sm:hidden">
-                        <a href="#"
+                        <a href="entity-search.html"
                             class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                             Previous </a>
-                        <a href="#"
+                        <a href="entity-search.html"
                             class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                             Next </a>
                     </div>
@@ -384,28 +415,28 @@
                             <!-- Page buttons -->
                             <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
                                 aria-label="Pagination">
-                                <a href="#"
+                                <a href="entity-search.html"
                                     class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                     <span class="sr-only">Previous</span>
                                     <span class="text-lg">‹</span>
                                 </a>
                                 <!-- Highlighted "showcase" state -->
-                                <a href="#" aria-current="page"
+                                <a href="entity-search.html" aria-current="page"
                                     class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-bold">
                                     1 </a>
-                                <a href="#"
+                                <a href="entity-search.html"
                                     class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
                                     2 </a>
-                                <a href="#"
+                                <a href="entity-search.html"
                                     class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium">
                                     3 </a>
                                 <span
                                     class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
                                     ... </span>
-                                <a href="#"
+                                <a href="entity-search.html"
                                     class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium">
                                     10 </a>
-                                <a href="#"
+                                <a href="entity-search.html"
                                     class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                     <span class="sr-only">Next</span>
                                     <span class="text-lg">›</span>

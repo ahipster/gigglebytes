@@ -4,42 +4,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Construction - GRIP</title>
+    <title>Entity Resolution Rules - GRIP</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
+
+        .nav-item {
+            color: #cbd5e1;
+        }
+
+        .nav-item:hover {
+            background-color: #1e293b;
+            color: white;
+        }
+
+        .nav-item.active {
+            background-color: #1e293b;
+            color: white;
+        }
     </style>
 </head>
 
-<body class="bg-gray-50 flex h-screen items-center justify-center">
-
-    <div class="text-center max-w-lg px-4">
-        <div class="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-600">
-            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
-                </path>
-            </svg>
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 font-bold text-white shrink-0">
+                G</div>
+            <span class="text-lg font-bold tracking-wide truncate">GRIP</span>
         </div>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Coming Soon</h1>
-        <p class="text-gray-500 mb-8">This page is part of the implementation plan (Weeks 4-5) and has not been mocked
-            up yet.</p>
-
-        <div class="space-y-4">
-            <button onclick="history.back()"
-                class="w-full px-5 py-3 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors">
-                Go Back
-            </button>
-            <a href="dashboard.html"
-                class="block w-full px-5 py-3 bg-blue-600 rounded-lg text-white font-medium hover:bg-blue-700 transition-colors">
-                Return to Dashboard
-            </a>
+        <div class="p-4 flex-1 overflow-y-auto">
+            <nav class="space-y-1">
+                <a href="dashboard.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📊</span> <span class="truncate">Dashboard</span>
+                </a>
+                <a href="entity-search.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔍</span> <span class="truncate">Entity Search</span>
+                </a>
+                <a href="lineage-overview.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🌲</span> <span class="truncate">Lineage Mapping</span>
+                </a>
+                <a href="task-queue.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📋</span> <span class="truncate">Task Queue</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuration</p>
+                </div>
+                <a href="source-detail.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">💚</span> <span class="truncate">Sources</span>
+                </a>
+                <a href="dq-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">✅</span> <span class="truncate">DQ Rules</span>
+                </a>
+                <a href="er-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🔗</span> <span class="truncate">ER Rules</span>
+                </a>
+                <a href="survivorship-rules.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">🏆</span> <span class="truncate">Survivorship</span>
+                </a>
+                <div class="pt-4 pb-2">
+                    <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System</p>
+                </div>
+                <a href="audit-log.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">📜</span> <span class="truncate">Audit Log</span>
+                </a>
+                <a href="user-management.html"
+                    class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <span class="mr-3 text-xl">👤</span> <span class="truncate">Users</span>
+                </a>
+            </nav>
         </div>
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center">
+                <div
+                    class="h-8 w-8 rounded-full bg-blue-500 border border-blue-400/30 flex items-center justify-center text-[10px] font-bold shadow-md">
+                    AU</div>
+                <div class="ml-3 truncate">
+                    <p class="text-xs font-bold text-white truncate">Admin User</p>
+                    <p class="text-[10px] text-slate-400 truncate">Governance Ops</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+                const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+                sidebarLinks.forEach(link => {
+                    if (link.getAttribute('href') === currentPath) {
+                        link.classList.add('bg-slate-800', 'text-white');
+                        link.classList.remove('text-slate-300');
+                    } else {
+                        link.classList.remove('bg-slate-800', 'text-white');
+                        link.classList.add('text-slate-300');
+                    }
+                });
+            });
+
+            function switchVersion(ver) {
+                const unreleasedBanner = document.getElementById('unreleased-banner');
+                const btn12 = document.getElementById('ver-v1.2');
+                const btn13 = document.getElementById('ver-v1.3');
+
+                if (ver === 'v1.3') {
+                    unreleasedBanner.classList.remove('hidden');
+                    btn13.className = "px-3 py-1 text-xs font-bold rounded-md transition-all bg-white text-blue-600 shadow-sm border border-gray-200";
+                    btn12.className = "px-3 py-1 text-xs font-bold rounded-md transition-all text-gray-500 hover:bg-gray-200";
+                } else {
+                    unreleasedBanner.classList.add('hidden');
+                    btn12.className = "px-3 py-1 text-xs font-bold rounded-md transition-all bg-white text-blue-600 shadow-sm border border-gray-200";
+                    btn13.className = "px-3 py-1 text-xs font-bold rounded-md transition-all text-gray-500 hover:bg-gray-200";
+                }
+            }
+        </script>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8">
+            <div class="flex items-center space-x-4">
+                <h1 class="text-xl font-bold text-gray-900">Entity Resolution (ER) Rules</h1>
+                <div class="h-8 w-px bg-gray-200 mx-2"></div>
+                <div class="flex items-center space-x-2 bg-gray-100 p-1 rounded-lg">
+                    <button onclick="switchVersion('v1.2')" id="ver-v1.2"
+                        class="px-3 py-1 text-xs font-bold rounded-md transition-all bg-white text-blue-600 shadow-sm border border-gray-200">v1.2
+                        (Current)</button>
+                    <button onclick="switchVersion('v1.3')" id="ver-v1.3"
+                        class="px-3 py-1 text-xs font-bold rounded-md transition-all text-gray-500 hover:bg-gray-200">v1.3
+                        (Next)</button>
+                </div>
+            </div>
+            <div class="flex space-x-3">
+                <button
+                    class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-bold text-gray-600 hover:bg-gray-50">Match
+                    Simulator</button>
+                <button onclick="window.location.href='create-dq-rule-template.html'"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-blue-700 active:scale-95 transition-all">Add
+                    New Rule</button>
+            </div>
+        </header>
+
+        <!-- Version Status Banner -->
+        <div id="unreleased-banner" class="hidden bg-amber-50 border-b border-amber-100 px-8 py-2 flex items-center">
+            <span class="text-amber-600 mr-2 text-sm">⚠️</span>
+            <p class="text-[11px] font-bold text-amber-700 uppercase tracking-widest">Version v1.3: Unreleased, requires
+                IT deployment. Preview only.</p>
+        </div>
+
+        <main class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-4xl mx-auto space-y-8">
+                <!-- Matching Logic Section -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                    <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-6">Matching Logic
+                        (Deterministic & Probabilistic)</h3>
+
+                    <div class="space-y-6">
+                        <div onclick="window.location.href='manage-er-rule.html?mode=edit'"
+                            class="p-6 bg-blue-50/50 border border-blue-100 rounded-2xl cursor-pointer hover:bg-blue-100/50 transition-all group">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold text-slate-900">Rule 1: Exact Identifier Match</h4>
+                                <span
+                                    class="px-2 py-0.5 bg-blue-600 text-white rounded text-[10px] font-black uppercase">Auto-Merge</span>
+                            </div>
+                            <p class="text-sm text-slate-600 mb-4">If [LEI] or [RegistrationNumber] matches exactly
+                                across any two sources.</p>
+                            <div class="flex space-x-2">
+                                <span
+                                    class="px-2 py-1 bg-white border border-blue-200 rounded text-[10px] font-bold text-blue-600">LEI</span>
+                                <span
+                                    class="px-2 py-1 bg-white border border-blue-200 rounded text-[10px] font-bold text-blue-600">Reg_ID</span>
+                            </div>
+                        </div>
+
+                        <div onclick="window.location.href='manage-er-rule.html?mode=edit'"
+                            class="p-6 bg-white border border-gray-100 rounded-2xl shadow-sm cursor-pointer hover:border-blue-300 transition-all group">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold text-slate-900">Rule 2: Fuzzy Name & Address</h4>
+                                <span
+                                    class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded text-[10px] font-black uppercase">Review
+                                    Required</span>
+                            </div>
+                            <p class="text-sm text-slate-600 mb-4">Levenstein distance score > 0.85 on LegalName AND
+                                City exact match.</p>
+                            <div class="w-full bg-gray-100 h-2 rounded-full mb-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase">
+                                <span>Threshold: 0.85</span>
+                                <span>Current Sensitivity: High</span>
+                            </div>
+                        </div>
+
+                        <div onclick="window.location.href='manage-er-rule.html?mode=edit'"
+                            class="p-6 bg-blue-50/50 border border-blue-100 rounded-2xl cursor-pointer hover:bg-blue-100/50 transition-all group">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold text-slate-900">Rule 3: Multi-Identifier Cross-Match</h4>
+                                <span
+                                    class="px-2 py-0.5 bg-blue-600 text-white rounded text-[10px] font-black uppercase">Auto-Merge</span>
+                            </div>
+                            <p class="text-sm text-slate-600 mb-4">High-confidence match on multiple distinct
+                                identifiers across sources (e.g., LEI + VAT_ID).</p>
+                            <div class="flex space-x-2">
+                                <span
+                                    class="px-2 py-1 bg-white border border-blue-200 rounded text-[10px] font-bold text-blue-600">LEI</span>
+                                <span
+                                    class="px-2 py-1 bg-white border border-blue-200 rounded text-[10px] font-bold text-blue-600">VAT_ID</span>
+                                <span
+                                    class="px-2 py-1 bg-white border border-blue-200 rounded text-[10px] font-bold text-blue-600">ISIN</span>
+                            </div>
+                        </div>
+
+                        <div onclick="window.location.href='manage-er-rule.html?mode=edit'"
+                            class="p-6 bg-blue-50/50 border border-blue-100 rounded-2xl cursor-pointer hover:bg-blue-100/50 transition-all group">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold text-slate-900">Rule 4: Verified Parent & Shared ID</h4>
+                                <span
+                                    class="px-2 py-0.5 bg-blue-600 text-white rounded text-[10px] font-black uppercase">Auto-Merge</span>
+                            </div>
+                            <p class="text-sm text-slate-600 mb-4">Entities sharing a verified Parent LEI and at least
+                                one other business identifier.</p>
+                            <div class="flex space-x-2 text-[10px] font-bold">
+                                <div
+                                    class="flex items-center space-x-1 text-slate-400 bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                                    <span>Parent LEI</span>
+                                </div>
+                                <div
+                                    class="flex items-center space-x-1 text-blue-600 bg-white px-2 py-1 rounded border border-blue-200">
+                                    <span>+ Reg ID</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div onclick="window.location.href='manage-er-rule.html?mode=edit'"
+                            class="p-6 bg-blue-50/50 border border-blue-100 rounded-2xl cursor-pointer hover:bg-blue-100/50 transition-all group">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold text-slate-900">Rule 5: SWIFT/BIC Financial Match</h4>
+                                <span
+                                    class="px-2 py-0.5 bg-blue-600 text-white rounded text-[10px] font-black uppercase">Auto-Merge</span>
+                            </div>
+                            <p class="text-sm text-slate-600 mb-4">Deterministic match based on SWIFT/BIC code and
+                                Jaro-Winkler name similarity > 0.95.</p>
+                            <div class="flex items-center space-x-2">
+                                <span
+                                    class="text-[10px] font-black text-blue-700 bg-blue-100 px-2 py-0.5 rounded uppercase">BIC
+                                    Match</span>
+                                <span class="text-[10px] font-bold text-slate-400">AND Similarity > 95%</span>
+                            </div>
+                        </div>
+
+                        <div onclick="window.location.href='manage-er-rule.html?mode=edit'"
+                            class="p-6 bg-blue-50/50 border border-blue-100 rounded-2xl cursor-pointer hover:bg-blue-100/50 transition-all group">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold text-slate-900">Rule 6: Corporate Domain & Email Verification</h4>
+                                <span
+                                    class="px-2 py-0.5 bg-blue-600 text-white rounded text-[10px] font-black uppercase">Auto-Merge</span>
+                            </div>
+                            <p class="text-sm text-slate-600 mb-4">Matches on official domain (from website) and a
+                                verified regulatory contact email.</p>
+                            <div class="flex space-x-2">
+                                <div
+                                    class="flex items-center space-x-1 text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100">
+                                    <span>Domain Verified</span>
+                                </div>
+                                <div
+                                    class="flex items-center space-x-1 text-[9px] font-bold text-blue-600 bg-white px-2 py-1 rounded border border-blue-200">
+                                    <span>Contact Email Match</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blocking Keys -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                    <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Blocking Strategy
+                        (Performance)</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 border border-gray-100 rounded-xl bg-gray-50 flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-700">Jurisdiction + City</span>
+                            <div class="w-10 h-5 bg-green-500 rounded-full relative">
+                                <div class="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 border border-gray-100 rounded-xl bg-gray-50 flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-700">First 5 chars of Name</span>
+                            <div class="w-10 h-5 bg-gray-200 rounded-full relative">
+                                <div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-
 </body>
 
 </html>
