@@ -199,18 +199,19 @@
 | source_name | String(100) | Config | Human-readable |
 | jurisdiction_id | FK | Config | |
 | registry_type | Enum | Config | BUSINESS, TAX, FI, INDIVIDUAL |
+| legal_forms_covered | String | Config | Comma-separated or JSON list |
+| lookup_url | URL | Config | Direct link to public search |
 | api_available | Boolean | Config | |
 | api_type | Enum | Config | REST, SOAP, SDMX, FILE, NONE |
-| cost_model | Enum | Config | FREE, SUBSCRIPTION, PER_QUERY, CONTRACT |
+| cost_model_prog | Enum | Config | Model for API Access |
+| cost_model_manual | Enum | Config | Model for Web/Manual Access |
+| integration_status | Enum | Computed | ACTIVE (Free+NoLogin), PARTIAL, NOT_INTEGRATED |
 | refresh_frequency | String | Config | e.g., "DAILY", "MONTHLY", "ON_DEMAND" |
 | delta_available | Boolean | Config | Supports incremental updates |
 | identifier_format | Regex | Config | Validation pattern |
+| data_model_docs | URL | Config | Link to schema documentation |
 | priority_rank | Integer | Config | For survivorship when sources conflict |
-| rate_limit_requests | Integer | Config | Max requests per period |
-| rate_limit_period_seconds | Integer | Config | Rate limit window |
-| auth_type | Enum | Config | NONE, API_KEY, OAUTH2, CERT, BASIC |
-| auth_config | JSON | Config | Auth credentials (encrypted ref) |
-| last_health_check | Timestamp | System | |
+| last_ingest_ts | Timestamp | System | Most recent successful extraction |
 | health_status | Enum | System | HEALTHY, DEGRADED, DOWN |
 
 ## 2.7 Address Composite Type
@@ -742,7 +743,24 @@ HEALTHY --(>5% errors)--> DEGRADED --(>20% errors)--> DOWN
    +----(< 1% errors)---------+----(recovered)----------+
 ```
 
-## 4.8 RACI Matrix
+## 4.8 P11: Rule Management & Simulation
+
+**Purpose:** Author, test, and deploy business logic without code deployment.
+
+**Capabilities:**
+- **Visual Logic Builder:** No-code editor for DQ, ER, and Survivorship rules.
+- **Dry-Run Simulation:** Test rules against real/sample data (e.g., "Test vs. GLEIF Record A") before saving.
+- **Versioning:** All rulesets have major/minor versions (v1.0, v1.1-draft) with rollback support.
+- **Strategy Matrix:** Survivorship rules defined at attribute level via precedence matrix (Consensus > Source Rank > Trust Score).
+
+**Simulation Workflow:**
+1. **Draft:** Steward creates vNext of a rule.
+2. **Select Data:** Identify test entity or source payload.
+3. **Run Simulation:** System executes logic in isolated sandbox.
+4. **Visualize:** Show "Winner" (Survivorship) or "Match/No-Match" (ER).
+5. **Deploy:** Promote to production if results match expectations.
+
+## 4.9 RACI Matrix
 
 | Activity | Data Steward | Data Ops | IT | Process Owner |
 |----------|--------------|----------|----|----|
@@ -777,6 +795,26 @@ HEALTHY --(>5% errors)--> DEGRADED --(>20% errors)--> DOWN
 - **Frequency:** Weekly, 1-2 hours + audit periods
 
 ## 5.2 User Stories
+
+### Epic: Rules & Governance
+
+**US-GOV-001:** As a Data Steward, I want to simulate changing a survivorship rule so that I can see the impact on the Golden Record without affecting production data.
+- **Acceptance Criteria:**
+  - "Live Test" panel available in rule editor
+  - Can select specific test cases (e.g., "Conflict: Legal Name")
+  - Visual animation of winner selection (e.g., "Source Rank > Consensus")
+
+**US-GOV-002:** As a Data Steward, I want to manage user permissions granularly so that operational users cannot modify business rules.
+- **Acceptance Criteria:**
+  - Dedicated "Permissions" screen per user
+  - Toggles for "Data Access", "Rule Management", "Ops Tasks"
+  - Admin overview of all active users and roles
+
+**US-GOV-003:** As a Data Steward, I want to browse the full inventory of 100+ sources with their integration status so that I know which registries are actively contributing data.
+- **Acceptance Criteria:**
+  - Sortable table with 13+ columns (Cost, API Type, Latency)
+  - Status badges: Active (Free+NoLogin), Partial (Web Only), Not Integrated
+  - Horizontal scrolling for dense metadata view
 
 ### Epic: Entity Search & Establishment
 
