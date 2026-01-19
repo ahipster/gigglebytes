@@ -6,9 +6,11 @@
         "dev": "pnpm --filter @grip/app dev",
         "build": "pnpm -r build",
         "test": "pnpm -r test",
-        "lint": "pnpm -r lint"
+        "lint": "pnpm -r lint",
+        "demo": "node scripts/4o_demo.js"
     },
     "devDependencies": {
+        "playwright": "^1.57.0",
         "typescript": "^5"
     }
 }
