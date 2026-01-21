@@ -1,0 +1,45 @@
+:root {
+    --seb-green: #60CD18;
+    --seb-green-dark: #4da612;
+    --seb-black: #000000;
+    --seb-dark-blue: #002D33; /* Typical for SEB */
+    --seb-gray-label: #555555;
+    --seb-gray-bg: #F8F8F8;
+    --seb-gray-border: #E0E0E0;
+}
+
+/* Base Styles */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sentence Case Utility */
+.sentence-case {
+    text-transform: lowercase;
+}
+.sentence-case::first-letter {
+    text-transform: uppercase;
+}
+
+/* SEB Button Style */
+.btn-seb-primary {
+    background-color: var(--seb-green);
+    color: white;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+.btn-seb-primary:hover {
+    background-color: var(--seb-green-dark);
+}
+
+.btn-seb-secondary {
+    background-color: white;
+    color: var(--seb-green);
+    border: 1px solid var(--seb-green);
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+.btn-seb-secondary:hover {
+    background-color: rgba(96, 205, 24, 0.05);
+}
