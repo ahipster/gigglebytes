@@ -7,7 +7,9 @@
         "build": "pnpm -r build",
         "test": "pnpm -r test",
         "lint": "pnpm -r lint",
-        "demo": "node scripts/4o_demo.js"
+        "demo_gpt": "node scripts/4o_demo.js",
+        "demo_claude": "node scripts/opus45_demo.js"
+
     },
     "devDependencies": {
         "playwright": "^1.57.0",
